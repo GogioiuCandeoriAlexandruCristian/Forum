@@ -6,7 +6,9 @@ import com.alexG.domain.entities.Category;
 
 public interface CacheModel {
 
-	List<Category> findAllCategories();
+	List<CategoryModel> findAllCategories();
+
+	List<TechnologyModel> findTechnologies(Long id);
 
 	
 }

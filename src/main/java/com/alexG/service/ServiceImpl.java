@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alexG.domain.entities.Category;
 import com.alexG.model.CacheModel;
 import com.alexG.model.CategoryModel;
+import com.alexG.model.TechnologyModel;
 
 @org.springframework.stereotype.Service
 public class ServiceImpl implements Service {
@@ -16,8 +17,12 @@ public class ServiceImpl implements Service {
 
 	@Override
 	public List<CategoryModel> findAllCategories() {
-		List<Category> categories = cacheModel.findAllCategories();
-		return null;
+		return cacheModel.findAllCategories();
+	}
+
+	@Override
+	public List<TechnologyModel> findTechnologies(Long categId) {
+		return cacheModel.findTechnologies(categId);
 	}
 
 }
