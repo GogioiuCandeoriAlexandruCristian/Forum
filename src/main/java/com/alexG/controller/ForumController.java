@@ -17,8 +17,8 @@ public class ForumController {
     @Autowired
     private Service service;
 
-    @GetMapping("/notes")
-    public List<CategoryModel> getAllNotes() {
+    @GetMapping("/categories")
+    public List<CategoryModel> getAllCategories() {
         return service.findAllCategories();
     }
 
