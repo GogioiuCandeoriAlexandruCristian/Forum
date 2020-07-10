@@ -3,8 +3,7 @@ package com.alexG.domain.entities;
 import java.util.List;
 
 public class Category {
-	private int id;
-	private String title;
-	private List<Technology> technologies;
-
+	public Long id;
+	public String title;
+	public List<Technology> technologies;
 }

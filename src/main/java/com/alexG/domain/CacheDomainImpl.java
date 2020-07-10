@@ -1,5 +1,6 @@
 package com.alexG.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import com.alexG.repository.CategoryRepository;
 @Component
 public class CacheDomainImpl implements CacheDomain {
 
-	private List<Category> categoryCache;
+	private List<Category> categoryCache = new ArrayList<>();
 	
 	@Autowired
 	private CategoryRepository categRepo;

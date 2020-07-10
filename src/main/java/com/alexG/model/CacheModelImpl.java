@@ -2,6 +2,7 @@ package com.alexG.model;
 
 import java.util.List;
 
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,15 +13,21 @@ import io.vavr.control.Option;
 @Component
 public class CacheModelImpl implements CacheModel {
 
-	@Autowired
 	private CacheDomain cacheDomain;
 
 	private List<CategoryModel> categoriesCache;
 
+	private ModelMapperCategoryToModel mapper = Mappers.getMapper(ModelMapperCategoryToModel.class);
+
+	@Autowired
+	public CacheModelImpl(CacheDomain cacheDomain) {
+		this.cacheDomain = cacheDomain;
+		categoriesCache = mapper.categoriesToCategoryModel(cacheDomain.findAllCategories());
+	}
+
 	@Override
 	public List<CategoryModel> findAllCategories() {
-		cacheDomain.findAllCategories();
-		return null;
+		return categoriesCache;
 	}
 
 	@Override
