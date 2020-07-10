@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.alexG.domain.CacheDomain;
-import com.alexG.domain.Category;
+import com.alexG.domain.entities.Category;
 
 @Component
 public class CacheModelImpl implements CacheModel {

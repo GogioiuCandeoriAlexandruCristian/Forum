@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.alexG.domain.Category;
+import com.alexG.domain.entities.Category;
 import com.alexG.model.CacheModel;
 import com.alexG.model.CategoryModel;
 

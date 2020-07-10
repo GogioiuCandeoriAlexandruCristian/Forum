@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.alexG.domain.entities.Category;
 import com.alexG.entities.CategoryEntity;
 import com.alexG.repository.CategoryRepository;
 
