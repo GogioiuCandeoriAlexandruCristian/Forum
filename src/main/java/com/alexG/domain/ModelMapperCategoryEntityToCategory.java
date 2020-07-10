@@ -10,9 +10,9 @@ import com.alexG.entities.TechnologyEntity;
 
 @Mapper
 public interface ModelMapperCategoryEntityToCategory {
-	List<Category> categoriesToCategoryModel(List<CategoryEntity> categories);
+	List<Category> categoryEntitiesToCategory(List<CategoryEntity> categories);
 	
-	List<Technology> technologiesToTechnologyModel(List<TechnologyEntity> technologies);
+	List<Technology> technologyEntitiesToTechnology(List<TechnologyEntity> technologies);
 	
-	Technology categoryToTechnologyModel(TechnologyEntity technology);
+	Technology TechnologyEntityToTechnology(TechnologyEntity technology);
 }
