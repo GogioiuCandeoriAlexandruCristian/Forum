@@ -1,5 +1,6 @@
 package com.alexG.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -24,7 +25,7 @@ public class CategoryEntity {
     private Long id;
 
     @OneToMany(mappedBy="category", cascade= { CascadeType.REMOVE }, fetch = FetchType.EAGER)
-    private List<TechnologyEntity> technologies;
+    private List<TechnologyEntity> technologies = new ArrayList<>();
 
     @NotBlank
     private String title;
@@ -51,5 +52,9 @@ public class CategoryEntity {
 
 	public void setTechnologies(List<TechnologyEntity> technologies) {
 		this.technologies = technologies;
+	}
+
+	public void addTechnology(TechnologyEntity technology) {
+		technologies.add(technology);
 	}
 }

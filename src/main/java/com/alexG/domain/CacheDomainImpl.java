@@ -17,38 +17,20 @@ import com.alexG.entities.CategoryEntity;
 import com.alexG.entities.TechnologyEntity;
 import com.alexG.entities.TopicEntity;
 import com.alexG.entities.UserEntity;
-import com.alexG.repository.AnswerRepository;
-import com.alexG.repository.CategoryRepository;
-import com.alexG.repository.TechnologyRepository;
-import com.alexG.repository.TopicRepository;
-import com.alexG.repository.UserRepository;
 
 @Component
 public class CacheDomainImpl implements CacheDomain {
 
 	private List<Category> categoriesCache;
 
-	private CategoryRepository categRepo;
-
-	private TechnologyRepository techRepo;
-
-	private TopicRepository topicRepo;
-
-	private AnswerRepository answerRepo;
-
-	private UserRepository userRepo;
+	private Repository repo;
 
 	private ModelMapperCategoryEntityToCategory mapper = Mappers.getMapper(ModelMapperCategoryEntityToCategory.class);
 
 	@Autowired
-	public CacheDomainImpl(CategoryRepository categRepository, TechnologyRepository technologyRepository,
-			UserRepository userRepository, TopicRepository topicRepository, AnswerRepository answerRepoository) {
-		categRepo = categRepository;
-		techRepo = technologyRepository;
-		userRepo = userRepository;
-		topicRepo = topicRepository;
-		answerRepo = answerRepoository;
-		categoriesCache = mapper.categoryEntitiesToCategory(categRepo.findAll());
+	public CacheDomainImpl(Repository repo) {
+		this.repo = repo;
+		categoriesCache = mapper.categoryEntitiesToCategory(repo.findAllCategories());
 	}
 
 	public List<Category> getCategories() {
@@ -58,7 +40,7 @@ public class CacheDomainImpl implements CacheDomain {
 	public Topic addTopic(Topic topic, Long categoryId, Long technologyId) {
 		TopicEntity topicEntity = new TopicEntity(topic.title, topic.question, findTechnologyEntity(technologyId),
 				findUserEntity(topic.userCreator.getId()));
-		topicRepo.save(topicEntity);
+		repo.saveTopic(topicEntity);
 		topic.setId(topicEntity.getId());
 		Technology technlogy = findTechnology(categoryId, technologyId);
 		technlogy.addTopic(topic);
@@ -68,7 +50,7 @@ public class CacheDomainImpl implements CacheDomain {
 	public Technology addTechnology(Technology technology, Long categoryId, String title) {
 		Category categ = findCategory(categoryId);
 		TechnologyEntity techEntity = new TechnologyEntity(title, findCategoryEntity(categ.id));
-		techRepo.save(techEntity);
+		repo.saveTechnology(techEntity);
 		technology.setId(techEntity.getId());
 		categ.addTechnology(technology);
 		return technology;
@@ -77,7 +59,7 @@ public class CacheDomainImpl implements CacheDomain {
 	public void changeTopicFromTechnolgy(Long categoryId, Long topicId, Long actualTechnologyId, Long newTechnologyId) {
 		TopicEntity topicEntity = findTopicEntity(topicId);
 		topicEntity.setTechnology(findTechnologyEntity(newTechnologyId));
-		topicRepo.save(topicEntity);
+		repo.saveTopic(topicEntity);
 		Category categ = findCategory(categoryId);
 		categ.changeTopicFromTechnolgy(topicId, actualTechnologyId, newTechnologyId);
 	}
@@ -85,27 +67,27 @@ public class CacheDomainImpl implements CacheDomain {
 	public void changeCategTitle(Long categId, String newTitle) {
 		CategoryEntity categEntity = findCategoryEntity(categId);
 		categEntity.setTitle(newTitle);
-		categRepo.save(categEntity);
+		repo.saveCategory(categEntity);
 		Category categ = findCategory(categId);
 		categ.changeTitle(newTitle);
 	}
 
 	public void deleteTechnology(Long categId, Long technologyId) {
 		Category categ = findCategory(categId);
-		techRepo.deleteById(technologyId);
+		repo.deleteTechnologyById(technologyId);
 		categ.deleteTechnology(technologyId);
 	}
 
 	public void deleteTopic(Long categoryId, Long technologyId, Long topicId) {
 		Technology technlogy = findTechnology(categoryId, technologyId);
-		topicRepo.deleteById(topicId);
+		repo.deleteTopicById(topicId);
 		technlogy.removeTopic(topicId);
 	}
 
 	public void changeTechnologyTitle(Long categoryId, Long technologyId, String newTitle) {
 		TechnologyEntity techEntity = findTechnologyEntity(technologyId);
 		techEntity.setTitle(newTitle);
-		techRepo.save(techEntity);
+		repo.saveTechnology(techEntity);
 		Technology technlogy = findTechnology(categoryId, technologyId);
 		technlogy.changeTitle(newTitle);
 	}
@@ -116,7 +98,7 @@ public class CacheDomainImpl implements CacheDomain {
 		if (topic.isUserCreator(user)) {
 			TopicEntity topicEntity = findTopicEntity(topicId);
 			topicEntity.setQuestion(newQuestion);
-			topicRepo.save(topicEntity);
+			repo.saveTopic(topicEntity);
 			topic.editQuestion(newQuestion);
 		} else {
 			throw new Exception("This user can't edit this question");
@@ -124,8 +106,8 @@ public class CacheDomainImpl implements CacheDomain {
 	}
 
 	public Answer addAnswer(Answer answer, Long categoryId, Long technologyId, Long topicId) {
-		AnswerEntity answerEntity = new AnswerEntity(answer.text, findTopicEntity(topicId), findUserEntity(answer.creatorUser.getId()));
-		answerRepo.save(answerEntity);
+		AnswerEntity answerEntity = new AnswerEntity(answer.text, findTopicEntity(topicId), findUserEntity(answer.userCreator.getId()));
+		repo.saveAnswer(answerEntity);
 		answer.setId(answerEntity.getId());
 		Topic topic = findTopic(categoryId, technologyId, topicId);
 		topic.addAnswer(answer);
@@ -137,9 +119,13 @@ public class CacheDomainImpl implements CacheDomain {
 		Answer answer = findAnswer(categoryId, technologyId, topicId, answerId);
 		if (answer.isCreatorUser(user)) {
 			AnswerEntity answerEntity = findAnswerEntity(answerId);
-			answerEntity.setRating(rating);
-			answerRepo.save(answerEntity);
-			answer.rating = rating;
+			if(answer.isRatingOk(rating)) {
+				answerEntity.setRating(rating);
+				repo.saveAnswer(answerEntity);
+				answer.setRating(rating);
+			} else {
+				throw new Exception("This rating is invalid");
+			}
 		} else {
 			throw new Exception("This user can't rate this answer");
 		}
@@ -151,8 +137,8 @@ public class CacheDomainImpl implements CacheDomain {
 		if (answer.isCreatorUser(user)) {
 			AnswerEntity answerEntity = findAnswerEntity(answerId);
 			answerEntity.setPoints(points);
-			answerRepo.save(answerEntity);
-			answer.points = points;
+			repo.saveAnswer(answerEntity);
+			answer.setPoints(points);
 		} else {
 			throw new Exception("This user can't point this answer");
 		}
@@ -164,7 +150,7 @@ public class CacheDomainImpl implements CacheDomain {
 		if (answer.isCreatorUser(user)) {
 			AnswerEntity answerEntity = findAnswerEntity(answerId);
 			answerEntity.setText(newText);
-			answerRepo.save(answerEntity);
+			repo.saveAnswer(answerEntity);
 			answer.editText(newText);
 		} else {
 			throw new Exception("This user can't edit this answer");
@@ -175,7 +161,7 @@ public class CacheDomainImpl implements CacheDomain {
 			throws Exception {
 		Topic topic = findTopic(categoryId, technologyId, topicId);
 		if (topic.isUserCreatorForAnswer(user, answerId)) {
-			answerRepo.deleteById(answerId);
+			repo.deleteAnswerById(answerId);
 			topic.deleteAnswer(answerId);
 		} else {
 			throw new Exception("This user can't remove this answer");
@@ -184,7 +170,7 @@ public class CacheDomainImpl implements CacheDomain {
 
 	private UserEntity findUserEntity(Long userId) {
 		try {
-			return userRepo.findById(userId).get();
+			return repo.findUserById(userId).get();
 		} catch (NoSuchElementException ex) {
 			NoSuchElementException exception = new NoSuchElementException(
 					"Not found -> User Entity with id: " + userId);
@@ -194,7 +180,7 @@ public class CacheDomainImpl implements CacheDomain {
 
 	private CategoryEntity findCategoryEntity(Long categroyId) {
 		try {
-			return categRepo.findById(categroyId).get();
+			return repo.findCategoryById(categroyId).get();
 		} catch (NoSuchElementException ex) {
 			NoSuchElementException exception = new NoSuchElementException(
 					"Not found -> Category Entity with id: " + categroyId);
@@ -204,7 +190,7 @@ public class CacheDomainImpl implements CacheDomain {
 
 	private TechnologyEntity findTechnologyEntity(Long technologyId) {
 		try {
-			return techRepo.findById(technologyId).get();
+			return repo.findTechnologyById(technologyId).get();
 		} catch (NoSuchElementException ex) {
 			NoSuchElementException exception = new NoSuchElementException(
 					"Not found -> Technology Entity with id: " + technologyId);
@@ -214,7 +200,7 @@ public class CacheDomainImpl implements CacheDomain {
 
 	private TopicEntity findTopicEntity(Long topicId) {
 		try {
-			return topicRepo.findById(topicId).get();
+			return repo.findTopicById(topicId).get();
 		} catch (NoSuchElementException ex) {
 			NoSuchElementException exception = new NoSuchElementException(
 					"Not found -> Topic Entity with id: " + topicId);
@@ -224,7 +210,7 @@ public class CacheDomainImpl implements CacheDomain {
 
 	private AnswerEntity findAnswerEntity(Long answerId) {
 		try {
-			return answerRepo.findById(answerId).get();
+			return repo.findAnswerById(answerId).get();
 		} catch (NoSuchElementException ex) {
 			NoSuchElementException exception = new NoSuchElementException(
 					"Not found -> Answer Entity with id: " + answerId);

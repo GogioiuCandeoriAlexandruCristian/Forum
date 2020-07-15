@@ -42,7 +42,7 @@ public class ForumController {
 		}
 	}
 
-	@PostMapping("/answer/delete")
+	@PostMapping("/answer")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public Response getAnswers(Long categoryId, Long technologyId, Long topicId) {
 		try {
