@@ -59,7 +59,7 @@ public class CacheDomainImpl implements CacheDomain {
 		TopicEntity topicEntity = new TopicEntity(topic.title, topic.question,
 				findUserEntity(topic.userCreator.getId()));
 		topicRepo.save(topicEntity);
-		topic.setId(topicEntity.id);
+		topic.setId(topicEntity.getId());
 		Technology technlogy = findTechnology(categoryId, technologyId);
 		technlogy.addTopic(topic);
 		return topic;
@@ -76,7 +76,7 @@ public class CacheDomainImpl implements CacheDomain {
 
 	public void changeTopicFromTechnolgy(Long categoryId, Long topicId, Long actualTechnologyId, Long newTechnologyId) {
 		TopicEntity topicEntity = findTopicEntity(topicId);
-		topicEntity.technology = findTechnologyEntity(newTechnologyId);
+		topicEntity.setTechnology(findTechnologyEntity(newTechnologyId));
 		topicRepo.save(topicEntity);
 		Category categ = findCategory(categoryId);
 		categ.changeTopicFromTechnolgy(topicId, actualTechnologyId, newTechnologyId);
@@ -115,7 +115,7 @@ public class CacheDomainImpl implements CacheDomain {
 		Topic topic = findTopic(categoryId, technologyId, topicId);
 		if (topic.isUserCreator(user)) {
 			TopicEntity topicEntity = findTopicEntity(topicId);
-			topicEntity.question = newQuestion;
+			topicEntity.setQuestion(newQuestion);
 			topicRepo.save(topicEntity);
 			topic.editQuestion(newQuestion);
 		} else {
@@ -127,7 +127,7 @@ public class CacheDomainImpl implements CacheDomain {
 		Topic topic = findTopic(categoryId, technologyId, topicId);
 		AnswerEntity answerEntity = new AnswerEntity(answer.text, findUserEntity(answer.creatorUser.getId()));
 		answerRepo.save(answerEntity);
-		answer.setId(answerEntity.id);
+		answer.setId(answerEntity.getId());
 		topic.addAnswer(answer);
 		return answer;
 	}
@@ -137,7 +137,7 @@ public class CacheDomainImpl implements CacheDomain {
 		Topic topic = findTopic(categoryId, technologyId, topicId);
 		if (topic.isUserCreatorForAnswer(user, answerId)) {
 			AnswerEntity answerEntity = findAnswerEntity(answerId);
-			answerEntity.rating = rating;
+			answerEntity.setRating(rating);
 			answerRepo.save(answerEntity);
 			topic.rateAnswer(answerId, rating);
 		} else {
@@ -150,7 +150,7 @@ public class CacheDomainImpl implements CacheDomain {
 		Topic topic = findTopic(categoryId, technologyId, topicId);
 		if (topic.isUserCreatorForAnswer(user, answerId)) {
 			AnswerEntity answerEntity = findAnswerEntity(answerId);
-			answerEntity.points = points;
+			answerEntity.setPoints(points);
 			answerRepo.save(answerEntity);
 			topic.pointAnswer(answerId, points);
 		} else {
@@ -163,7 +163,7 @@ public class CacheDomainImpl implements CacheDomain {
 		Answer answer = findAnswer(categoryId, technologyId, topicId, answerId);
 		if (answer.isCreatorUser(user)) {
 			AnswerEntity answerEntity = findAnswerEntity(answerId);
-			answerEntity.text = newText;
+			answerEntity.setText(newText);
 			answerRepo.save(answerEntity);
 			answer.editText(newText);
 		} else {

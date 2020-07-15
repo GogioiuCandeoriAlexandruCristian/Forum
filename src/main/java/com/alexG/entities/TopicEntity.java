@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,22 +19,24 @@ import javax.validation.constraints.NotBlank;
 public class TopicEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Long id;
+	private Long id;
 	@NotBlank
-	public String title;
+	private String title;
 	@NotBlank
-	public String question;
+	private String question;
 
 	@ManyToOne
 	@JoinColumn(name = "tech_id")
-	public TechnologyEntity technology;
+	private TechnologyEntity technology;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	public UserEntity userCreator;
+	private UserEntity userCreator;
 
-	@OneToMany(mappedBy = "topic", cascade= { CascadeType.REMOVE })
-	public List<AnswerEntity> answers;
+	@OneToMany(mappedBy = "topic", cascade= { CascadeType.REMOVE }, fetch = FetchType.EAGER)
+	private List<AnswerEntity> answers;
+
+	public TopicEntity() {}
 
 	public TopicEntity(String title, String question, UserEntity userCreator) {
 		this.question = question;
@@ -71,5 +74,21 @@ public class TopicEntity {
 
 	public void setAnswers(List<AnswerEntity> answers) {
 		this.answers = answers;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public TechnologyEntity getTechnology() {
+		return technology;
+	}
+
+	public void setTechnology(TechnologyEntity technology) {
+		this.technology = technology;
 	}
 }

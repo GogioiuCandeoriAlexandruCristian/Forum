@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,7 +23,7 @@ public class CategoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy="category", cascade= { CascadeType.REMOVE })
+    @OneToMany(mappedBy="category", cascade= { CascadeType.REMOVE }, fetch = FetchType.EAGER)
     private List<TechnologyEntity> technologies;
 
     @NotBlank
@@ -43,4 +44,12 @@ public class CategoryEntity {
     public void setTitle(String title) {
         this.title = title;
     }
+
+	public List<TechnologyEntity> getTechnologies() {
+		return technologies;
+	}
+
+	public void setTechnologies(List<TechnologyEntity> technologies) {
+		this.technologies = technologies;
+	}
 }

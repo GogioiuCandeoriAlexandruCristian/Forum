@@ -6,16 +6,18 @@ import org.mapstruct.Mapper;
 
 import com.alexG.domain.entities.Answer;
 import com.alexG.domain.entities.Category;
+import com.alexG.domain.entities.Role;
 import com.alexG.domain.entities.Technology;
 import com.alexG.domain.entities.Topic;
 import com.alexG.domain.entities.User;
+import com.alexG.security.model.RoleModel;
 import com.alexG.security.model.UserModel;
 
 @Mapper
 public interface ModelMapperDomainToModel {
 	List<CategoryModel> categoriesToCategoryModel(List<Category> categories);
 
-	List<TechnologyModel> technologiesToTechnologyModel(List<Technology> technologies);
+	CategoryModel categoryToCategoryModel(Category categories);
 
 	TechnologyModel technlogyToTechnologyModel(Technology technology);
 
@@ -24,4 +26,6 @@ public interface ModelMapperDomainToModel {
 	AnswerModel answerToAnswerModel(Answer answer);
 
 	UserModel userToUserModel(User user);
+	
+	RoleModel roleToRoleModel(Role role);
 }

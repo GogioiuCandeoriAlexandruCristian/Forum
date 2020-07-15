@@ -40,7 +40,7 @@ public class UserEntity {
 	@Size(max = 120)
 	private String password;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<RoleEntity> roles = new HashSet<>();
 
@@ -98,4 +98,21 @@ public class UserEntity {
 	public void setRoles(Set<RoleEntity> roles) {
 		this.roles = roles;
 	}
+
+	public List<TopicEntity> getTopics() {
+		return topics;
+	}
+
+	public void setTopics(List<TopicEntity> topics) {
+		this.topics = topics;
+	}
+
+	public List<AnswerEntity> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<AnswerEntity> answers) {
+		this.answers = answers;
+	}
+	
 }

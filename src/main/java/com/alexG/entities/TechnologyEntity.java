@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,9 +33,10 @@ public class TechnologyEntity {
 	@JoinColumn(name = "categ_id")
 	private CategoryEntity category;
 
-	@OneToMany(mappedBy = "technology", cascade= { CascadeType.REMOVE })
+	@OneToMany(mappedBy = "technology", cascade= { CascadeType.REMOVE }, fetch = FetchType.EAGER)
 	private List<TopicEntity> topics;
 
+	public TechnologyEntity() {}
 	public TechnologyEntity(String title, CategoryEntity category) {
 		this.title = title;
 		this.category = category;
@@ -54,5 +56,21 @@ public class TechnologyEntity {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public CategoryEntity getCategory() {
+		return category;
+	}
+
+	public void setCategory(CategoryEntity category) {
+		this.category = category;
+	}
+
+	public List<TopicEntity> getTopics() {
+		return topics;
+	}
+
+	public void setTopics(List<TopicEntity> topics) {
+		this.topics = topics;
 	}
 }

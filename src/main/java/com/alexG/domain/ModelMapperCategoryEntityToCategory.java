@@ -20,8 +20,8 @@ import com.alexG.entities.UserEntity;
 public interface ModelMapperCategoryEntityToCategory {
 	List<Category> categoryEntitiesToCategory(List<CategoryEntity> categories);
 	
-	List<Technology> technologyEntitiesToTechnology(List<TechnologyEntity> technologies);
-	
+	Category categoryEntityToCategory(CategoryEntity category);
+
 	Technology technologyEntityToTechnology(TechnologyEntity technology);
 
 	Topic topicEntityToTopic(TopicEntity topic);

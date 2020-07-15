@@ -1,11 +1,12 @@
 package com.alexG.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryModel {
 	public Long id;
 	public String title;
-	public List<TechnologyModel> technologies;
+	public List<TechnologyModel> technologies = new ArrayList<>();
 
 	public List<TechnologyModel> getTechnologies() {
 		return technologies;

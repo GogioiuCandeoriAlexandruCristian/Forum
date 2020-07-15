@@ -14,11 +14,11 @@ import javax.validation.constraints.NotBlank;
 public class AnswerEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Long id;
+	private Long id;
 	@NotBlank
-	public String text;
-	public int rating;
-	public int points;
+	private String text;
+	private int rating;
+	private int points;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -28,8 +28,58 @@ public class AnswerEntity {
 	@JoinColumn(name = "topic_id")
 	public TopicEntity topic;
 
+	public AnswerEntity() {}
+
 	public AnswerEntity(String text, UserEntity userCreator) {
 		this.text = text;
 		this.userCreator = userCreator;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public int getRating() {
+		return rating;
+	}
+
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
+	}
+
+	public UserEntity getUserCreator() {
+		return userCreator;
+	}
+
+	public void setUserCreator(UserEntity userCreator) {
+		this.userCreator = userCreator;
+	}
+
+	public TopicEntity getTopic() {
+		return topic;
+	}
+
+	public void setTopic(TopicEntity topic) {
+		this.topic = topic;
 	}
 }
