@@ -144,7 +144,7 @@ public class RepositoryTestImpl extends Repository {
 		Category categ = findCategory(categoriesCache, categoryId);
 		Technology technology = categ.findTechnology(technologyId);
 		Topic topic = technology.findTopic(topicId);
-		return topic.getAnswer(answerId);
+		return topic.findAnswer(answerId);
 	}
 
 	public Category findCategory(List<Category> categoriesCache, Long categoryId) {

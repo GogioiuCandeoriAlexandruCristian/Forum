@@ -6,7 +6,6 @@ import com.alexG.domain.entities.Answer;
 import com.alexG.domain.entities.Category;
 import com.alexG.domain.entities.Technology;
 import com.alexG.domain.entities.Topic;
-import com.alexG.domain.entities.User;
 
 public interface CacheDomain {
 

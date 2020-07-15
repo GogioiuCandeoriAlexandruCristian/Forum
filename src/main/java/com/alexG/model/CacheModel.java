@@ -2,8 +2,6 @@ package com.alexG.model;
 
 import java.util.List;
 
-import com.alexG.security.model.UserModel;
-
 public interface CacheModel {
 
 	List<CategoryModel> findAllCategories();

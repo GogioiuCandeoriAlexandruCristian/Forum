@@ -27,12 +27,12 @@ public class Topic {
 	}
 
 	public void rateAnswer(Long answerId, int rating) {
-		Answer answer = getAnswer(answerId);
+		Answer answer = findAnswer(answerId);
 		answer.setRating(rating);
 	}
 
 	public void deleteAnswer(Long answerId) {
-		Answer answer = getAnswer(answerId);
+		Answer answer = findAnswer(answerId);
 		answers.remove(answer);
 	}
 
@@ -41,10 +41,10 @@ public class Topic {
 	}
 
 	public boolean isUserCreatorForAnswer(User user, Long answerId) {
-		return getAnswer(answerId).isUserCreator(user);
+		return findAnswer(answerId).isUserCreator(user);
 	}
 
-	public Answer getAnswer(Long answerId) {
+	public Answer findAnswer(Long answerId) {
 		try {
 			Answer answer = io.vavr.collection.List.ofAll(answers).find(a -> a.getId() == answerId).get();
 			return answer;

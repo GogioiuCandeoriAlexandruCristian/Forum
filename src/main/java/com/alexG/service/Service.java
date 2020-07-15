@@ -6,7 +6,6 @@ import com.alexG.model.AnswerModel;
 import com.alexG.model.CategoryModel;
 import com.alexG.model.TechnologyModel;
 import com.alexG.model.TopicModel;
-import com.alexG.security.model.UserModel;
 
 public interface Service {
 	List<CategoryModel> getAllCategories();

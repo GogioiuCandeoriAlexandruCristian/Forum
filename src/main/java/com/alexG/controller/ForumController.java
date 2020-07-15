@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,9 +21,7 @@ import com.alexG.model.CategoryModel;
 import com.alexG.model.TechnologyModel;
 import com.alexG.model.TopicModel;
 import com.alexG.payload.response.Response;
-import com.alexG.security.jwt.AuthTokenFilter;
 import com.alexG.security.jwt.JwtUtils;
-import com.alexG.security.model.UserModel;
 import com.alexG.service.Service;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -40,16 +37,16 @@ public class ForumController {
 
 	@GetMapping("/categories")
 	public Response<List<CategoryModel>> getAllCategories() {
-		return new Response(service.getAllCategories(), null, false);
+		return new Response<List<CategoryModel>>(service.getAllCategories(), null, false);
 	}
 
 	@GetMapping("/technologies")
 	public Response<List<TechnologyModel>> getAllTechnologies(
 			@RequestParam(name = "categId", required = true) Long categId) {
 		try {
-			return new Response(service.getAllTechnologies(categId), null, false);
+			return new Response<List<TechnologyModel>>(service.getAllTechnologies(categId), null, false);
 		} catch (Exception ex) {
-			return new Response(null, ex.getMessage(), true);
+			return new Response<List<TechnologyModel>>(null, ex.getMessage(), true);
 		}
 	}
 

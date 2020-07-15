@@ -232,16 +232,13 @@ public class CacheDomainImpl implements CacheDomain {
 	}
 
 	private Topic findTopic(Long categoryId, Long technologyId, Long topicId) {
-		Category categ = findCategory(categoryId);
-		Technology technology = categ.findTechnology(technologyId);
+		Technology technology = findTechnology(categoryId, technologyId);
 		return technology.findTopic(topicId);
 	}
 
 	private Answer findAnswer(Long categoryId, Long technologyId, Long topicId, Long answerId) {
-		Category categ = findCategory(categoryId);
-		Technology technology = categ.findTechnology(technologyId);
-		Topic topic = technology.findTopic(topicId);
-		return topic.getAnswer(answerId);
+		Topic topic = findTopic(categoryId, technologyId, topicId);
+		return topic.findAnswer(answerId);
 	}
 
 	private Category findCategory(Long categoryId) {

@@ -9,7 +9,6 @@ import com.alexG.model.CacheModel;
 import com.alexG.model.CategoryModel;
 import com.alexG.model.TechnologyModel;
 import com.alexG.model.TopicModel;
-import com.alexG.security.model.UserModel;
 
 @org.springframework.stereotype.Service
 public class ServiceImpl implements Service {
