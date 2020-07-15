@@ -1,7 +1,6 @@
 package com.alexG.domain.tests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -18,15 +17,14 @@ import com.alexG.domain.entities.User;
 
 public class DomainTests {
 
-	public CacheDomainImpl cacheDomain;
 	public RepositoryTestImpl repo = new RepositoryTestImpl();
+	public CacheDomainImpl cacheDomain = new CacheDomainImpl(repo);
 
 	@Rule
 	public ExpectedException exceptionRule = ExpectedException.none();
 
 	@Test
 	public void rateAnswerTest() throws Exception {
-		cacheDomain = new CacheDomainImpl(repo);
 		Long categoryId = 1L;
 		Long technologyId = 1L;
 		Long topicId = 1L;
@@ -64,7 +62,6 @@ public class DomainTests {
 
 	@Test
 	public void pointAnswerTest() throws Exception {
-		cacheDomain = new CacheDomainImpl(repo);
 		Long categoryId = 1L;
 		Long technologyId = 1L;
 		Long topicId = 1L;
@@ -99,5 +96,4 @@ public class DomainTests {
 		assertEquals(answer.getPoints(), 3);
 		assertEquals(repo.findAnswerById(answerId).get().getPoints(), 3);
 	}
-
 }
