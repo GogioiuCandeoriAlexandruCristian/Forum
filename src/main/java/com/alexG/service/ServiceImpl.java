@@ -25,6 +25,10 @@ public class ServiceImpl implements Service {
 		return cacheModel.findTechnologies(categId);
 	}
 
+	public List<AnswerModel> getAnswers(Long categoryId, Long technologyId, Long topicId) {
+		return cacheModel.getAnswers(categoryId, technologyId, topicId);
+	}
+
 	public void addTopic(TopicModel topic, Long categoryId, Long technologyId) {
 		cacheModel.addTopic(topic, categoryId, technologyId);
 	}

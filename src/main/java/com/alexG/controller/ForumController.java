@@ -38,6 +38,18 @@ public class ForumController {
 		return new Response(service.getAllTechnologies(categId), null, false);
 	}
 
+
+	@PostMapping("/answer/delete")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public Response getAnswers(Long categoryId, Long technologyId, Long topicId) {
+		try {
+			service.getAnswers(categoryId, technologyId, topicId);
+			return new Response(null, null, false);
+		} catch (Exception ex) {
+			return new Response(null, ex.getMessage(), true);
+		}
+	}
+
 	@PostMapping("/topic")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public Response addTopic(TopicModel topic, Long categoryId, Long technologyId) {

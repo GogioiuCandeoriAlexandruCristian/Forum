@@ -44,6 +44,10 @@ public class CacheModelImpl implements CacheModel {
 		return null;
 	}
 
+	public List<AnswerModel> getAnswers(Long categoryId, Long technologyId, Long topicId) {
+		return findTopic(categoryId, technologyId, topicId).answers;
+	}
+
 	public void addTopic(TopicModel topicModel, Long categoryId, Long technologyId) {
 		Topic topic = cacheDomain.addTopic(mapperModelToDomain.topicModelToTopic(topicModel), categoryId, technologyId);
 		topicModel.setId(topic.getId());

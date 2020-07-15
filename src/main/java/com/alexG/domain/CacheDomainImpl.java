@@ -134,12 +134,12 @@ public class CacheDomainImpl implements CacheDomain {
 
 	public void rateAnswer(User user, Long categoryId, Long technologyId, Long topicId, Long answerId, int rating)
 			throws Exception {
-		Topic topic = findTopic(categoryId, technologyId, topicId);
-		if (topic.isUserCreatorForAnswer(user, answerId)) {
+		Answer answer = findAnswer(categoryId, technologyId, topicId, answerId);
+		if (answer.isCreatorUser(user)) {
 			AnswerEntity answerEntity = findAnswerEntity(answerId);
 			answerEntity.setRating(rating);
 			answerRepo.save(answerEntity);
-			topic.rateAnswer(answerId, rating);
+			answer.rating = rating;
 		} else {
 			throw new Exception("This user can't rate this answer");
 		}
@@ -147,12 +147,12 @@ public class CacheDomainImpl implements CacheDomain {
 
 	public void pointAnswer(User user, Long categoryId, Long technologyId, Long topicId, Long answerId, int points)
 			throws Exception {
-		Topic topic = findTopic(categoryId, technologyId, topicId);
-		if (topic.isUserCreatorForAnswer(user, answerId)) {
+		Answer answer = findAnswer(categoryId, technologyId, topicId, answerId);
+		if (answer.isCreatorUser(user)) {
 			AnswerEntity answerEntity = findAnswerEntity(answerId);
 			answerEntity.setPoints(points);
 			answerRepo.save(answerEntity);
-			topic.pointAnswer(answerId, points);
+			answer.points = points;
 		} else {
 			throw new Exception("This user can't point this answer");
 		}

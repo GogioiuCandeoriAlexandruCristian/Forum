@@ -73,7 +73,6 @@ public class AuthController {
 			return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
 		}
 
-		// Create new user's account
 		UserModel user = new UserModel(signUpRequest.getUsername(), signUpRequest.getEmail(),
 				encoder.encode(signUpRequest.getPassword()));
 
@@ -82,20 +81,17 @@ public class AuthController {
 
 		if (strRoles == null) {
 			RoleModel userRole = userDetailService.findRoleByName("ROLE_USER");
-			// .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 			roles.add(userRole);
 		} else {
 			strRoles.forEach(role -> {
 				switch (role) {
 				case "admin":
 					RoleModel adminRole = userDetailService.findRoleByName("ROLE_ADMIN");
-					// .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 					roles.add(adminRole);
 
 					break;
 				default:
 					RoleModel userRole = userDetailService.findRoleByName("ROLE_USER");
-					// .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 					roles.add(userRole);
 				}
 			});

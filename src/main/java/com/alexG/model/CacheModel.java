@@ -10,6 +10,8 @@ public interface CacheModel {
 
 	List<TechnologyModel> findTechnologies(Long id);
 
+	List<AnswerModel> getAnswers(Long categoryId, Long technologyId, Long topicId);
+
 	void addTopic(TopicModel topic, Long categoryId, Long technologyId);
 
 	void addTechnology(TechnologyModel technology, Long categoryId, String title);

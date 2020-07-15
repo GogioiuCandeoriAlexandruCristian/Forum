@@ -13,6 +13,8 @@ public interface Service {
 
 	List<TechnologyModel> getAllTechnologies(Long categId);
 
+	List<AnswerModel> getAnswers(Long categoryId, Long technologyId, Long topicId);
+
 	void addTopic(TopicModel topic, Long categoryId, Long technologyId);
 
 	void addTechnology(TechnologyModel technology, Long categoryId, String title);
