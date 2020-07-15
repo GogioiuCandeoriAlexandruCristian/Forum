@@ -2,6 +2,7 @@ package com.alexG.entities;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -21,8 +22,9 @@ public class CategoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy="category")
+    @OneToMany(mappedBy="category", cascade= { CascadeType.REMOVE })
     private List<TechnologyEntity> technologies;
+
     @NotBlank
     private String title;
 

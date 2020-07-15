@@ -2,6 +2,7 @@ package com.alexG.entities;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -31,7 +32,7 @@ public class TechnologyEntity {
 	@JoinColumn(name = "categ_id")
 	private CategoryEntity category;
 
-	@OneToMany(mappedBy = "technology")
+	@OneToMany(mappedBy = "technology", cascade= { CascadeType.REMOVE })
 	private List<TopicEntity> topics;
 
 	public TechnologyEntity(String title, CategoryEntity category) {
