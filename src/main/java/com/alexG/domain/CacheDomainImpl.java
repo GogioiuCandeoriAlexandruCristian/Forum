@@ -37,65 +37,67 @@ public class CacheDomainImpl implements CacheDomain {
 		return categoriesCache;
 	}
 
-	public Topic addTopic(Topic topic, Long categoryId, Long technologyId) {
+	public Topic addTopic(Topic topic, String username, Long categoryId, Long technologyId) {
+		Technology technology = findTechnology(categoryId, technologyId);
+		technology.addTopic(topic);
+		topic.userCreator = getUserByUsername(username);
 		TopicEntity topicEntity = new TopicEntity(topic.title, topic.question, findTechnologyEntity(technologyId),
 				findUserEntity(topic.userCreator.getId()));
 		repo.saveTopic(topicEntity);
 		topic.setId(topicEntity.getId());
-		Technology technlogy = findTechnology(categoryId, technologyId);
-		technlogy.addTopic(topic);
 		return topic;
 	}
 
-	public Technology addTechnology(Technology technology, Long categoryId, String title) {
+	public Technology addTechnology(Technology technology, Long categoryId) {
 		Category categ = findCategory(categoryId);
-		TechnologyEntity techEntity = new TechnologyEntity(title, findCategoryEntity(categ.id));
+		categ.addTechnology(technology);
+		TechnologyEntity techEntity = new TechnologyEntity(technology.title, findCategoryEntity(categ.id));
 		repo.saveTechnology(techEntity);
 		technology.setId(techEntity.getId());
-		categ.addTechnology(technology);
 		return technology;
 	}
 
 	public void changeTopicFromTechnolgy(Long categoryId, Long topicId, Long actualTechnologyId, Long newTechnologyId) {
+		Category categ = null;
+		categ = findCategory(categoryId);
+		categ.changeTopicFromTechnolgy(topicId, actualTechnologyId, newTechnologyId);
 		TopicEntity topicEntity = findTopicEntity(topicId);
 		topicEntity.setTechnology(findTechnologyEntity(newTechnologyId));
 		repo.saveTopic(topicEntity);
-		Category categ = findCategory(categoryId);
-		categ.changeTopicFromTechnolgy(topicId, actualTechnologyId, newTechnologyId);
 	}
 
-	public void changeCategTitle(Long categId, String newTitle) {
-		CategoryEntity categEntity = findCategoryEntity(categId);
+	public void changeCategTitle(Long categoryId, String newTitle) {
+		Category categ = findCategory(categoryId);
+		categ.changeTitle(newTitle);
+		CategoryEntity categEntity = findCategoryEntity(categoryId);
 		categEntity.setTitle(newTitle);
 		repo.saveCategory(categEntity);
-		Category categ = findCategory(categId);
-		categ.changeTitle(newTitle);
 	}
 
-	public void deleteTechnology(Long categId, Long technologyId) {
-		Category categ = findCategory(categId);
-		repo.deleteTechnologyById(technologyId);
+	public void deleteTechnology(Long categoryId, Long technologyId) {
+		Category categ = findCategory(categoryId);
 		categ.deleteTechnology(technologyId);
+		repo.deleteTechnologyById(technologyId);
 	}
 
 	public void deleteTopic(Long categoryId, Long technologyId, Long topicId) {
 		Technology technlogy = findTechnology(categoryId, technologyId);
-		repo.deleteTopicById(topicId);
 		technlogy.removeTopic(topicId);
+		repo.deleteTopicById(topicId);
 	}
 
 	public void changeTechnologyTitle(Long categoryId, Long technologyId, String newTitle) {
+		Technology technlogy = findTechnology(categoryId, technologyId);
+		technlogy.changeTitle(newTitle);
 		TechnologyEntity techEntity = findTechnologyEntity(technologyId);
 		techEntity.setTitle(newTitle);
 		repo.saveTechnology(techEntity);
-		Technology technlogy = findTechnology(categoryId, technologyId);
-		technlogy.changeTitle(newTitle);
 	}
 
-	public void editTopicQuestion(User user, Long categoryId, Long technologyId, Long topicId, String newQuestion)
+	public void editTopicQuestion(String username, Long categoryId, Long technologyId, Long topicId, String newQuestion)
 			throws Exception {
 		Topic topic = findTopic(categoryId, technologyId, topicId);
-		if (topic.isUserCreator(user)) {
+		if (topic.isUserCreator(getUserByUsername(username))) {
 			TopicEntity topicEntity = findTopicEntity(topicId);
 			topicEntity.setQuestion(newQuestion);
 			repo.saveTopic(topicEntity);
@@ -106,19 +108,19 @@ public class CacheDomainImpl implements CacheDomain {
 	}
 
 	public Answer addAnswer(Answer answer, Long categoryId, Long technologyId, Long topicId) {
+		Topic topic = findTopic(categoryId, technologyId, topicId);
+		topic.addAnswer(answer);
 		AnswerEntity answerEntity = new AnswerEntity(answer.text, findTopicEntity(topicId),
 				findUserEntity(answer.userCreator.getId()));
 		repo.saveAnswer(answerEntity);
 		answer.setId(answerEntity.getId());
-		Topic topic = findTopic(categoryId, technologyId, topicId);
-		topic.addAnswer(answer);
 		return answer;
 	}
 
-	public void rateAnswer(User user, Long categoryId, Long technologyId, Long topicId, Long answerId, int rating)
+	public void rateAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId, int rating)
 			throws Exception {
 		Answer answer = findAnswer(categoryId, technologyId, topicId, answerId);
-		if (answer.isCreatorUser(user)) {
+		if (answer.isUserCreator(getUserByUsername(username))) {
 			AnswerEntity answerEntity = findAnswerEntity(answerId);
 			if (answer.isRatingOk(rating)) {
 				answerEntity.setRating(rating);
@@ -132,10 +134,11 @@ public class CacheDomainImpl implements CacheDomain {
 		}
 	}
 
-	public void pointAnswer(User user, Long categoryId, Long technologyId, Long topicId, Long answerId, int points)
+	public void pointAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId, int points)
 			throws Exception {
 		Answer answer = findAnswer(categoryId, technologyId, topicId, answerId);
-		if (answer.isCreatorUser(user)) {
+		User user = getUserByUsername(username);
+		if (answer.isUserCreator(user)) {
 			if (user.isPointingOk(points)) {
 				UserEntity userEnt = findUserEntity(answer.userCreator.getId());
 				userEnt.addPoints(points);
@@ -149,10 +152,10 @@ public class CacheDomainImpl implements CacheDomain {
 		}
 	}
 
-	public void editAnswer(User user, Long categoryId, Long technologyId, Long topicId, Long answerId, String newText)
+	public void editAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId, String newText)
 			throws Exception {
 		Answer answer = findAnswer(categoryId, technologyId, topicId, answerId);
-		if (answer.isCreatorUser(user)) {
+		if (answer.isUserCreator(getUserByUsername(username))) {
 			AnswerEntity answerEntity = findAnswerEntity(answerId);
 			answerEntity.setText(newText);
 			repo.saveAnswer(answerEntity);
@@ -162,12 +165,12 @@ public class CacheDomainImpl implements CacheDomain {
 		}
 	}
 
-	public void deleteAnswer(User user, Long categoryId, Long technologyId, Long topicId, Long answerId)
+	public void deleteAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId)
 			throws Exception {
 		Topic topic = findTopic(categoryId, technologyId, topicId);
-		if (topic.isUserCreatorForAnswer(user, answerId)) {
+		topic.deleteAnswer(answerId);
+		if (topic.isUserCreatorForAnswer(getUserByUsername(username), answerId)) {
 			repo.deleteAnswerById(answerId);
-			topic.deleteAnswer(answerId);
 		} else {
 			throw new Exception("This user can't remove this answer");
 		}
@@ -251,5 +254,9 @@ public class CacheDomainImpl implements CacheDomain {
 					"Not found -> Category with id: " + categoryId);
 			throw exception;
 		}
+	}
+
+	private User getUserByUsername(String username) {
+		return mapper.userEntityToUser(repo.findUserByUsername(username));
 	}
 }

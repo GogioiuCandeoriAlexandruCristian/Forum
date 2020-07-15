@@ -11,7 +11,6 @@ import com.alexG.domain.CacheDomain;
 import com.alexG.domain.entities.Answer;
 import com.alexG.domain.entities.Technology;
 import com.alexG.domain.entities.Topic;
-import com.alexG.security.model.UserModel;
 
 @Component
 public class CacheModelImpl implements CacheModel {
@@ -43,15 +42,16 @@ public class CacheModelImpl implements CacheModel {
 		return findTopic(categoryId, technologyId, topicId).answers;
 	}
 
-	public void addTopic(TopicModel topicModel, Long categoryId, Long technologyId) {
-		Topic topic = cacheDomain.addTopic(mapperModelToDomain.topicModelToTopic(topicModel), categoryId, technologyId);
+	public void addTopic(TopicModel topicModel, String username, Long categoryId, Long technologyId) {
+		Topic topic = cacheDomain.addTopic(mapperModelToDomain.topicModelToTopic(topicModel), username, categoryId, technologyId);
 		topicModel.setId(topic.getId());
+		topicModel.userCreator = mapperDomnainToModel.userToUserModel(topic.userCreator);
 		findTechnology(categoryId, technologyId).addTopic(topicModel);
 	}
 
-	public void addTechnology(TechnologyModel technologyModel, Long categoryId, String title) {
+	public void addTechnology(TechnologyModel technologyModel, Long categoryId) {
 		Technology technology = cacheDomain
-				.addTechnology(mapperModelToDomain.technologyModelToTechnology(technologyModel), categoryId, title);
+				.addTechnology(mapperModelToDomain.technologyModelToTechnology(technologyModel), categoryId);
 		technologyModel.setId(technology.getId());
 		findCategory(categoryId).addTechnology(technologyModel);
 	}
@@ -83,9 +83,9 @@ public class CacheModelImpl implements CacheModel {
 		findTechnology(categoryId, technologyId).title = newTitle;
 	}
 
-	public void editTopicQuestion(UserModel userModel, Long categoryId, Long technologyId, Long topicId,
+	public void editTopicQuestion(String username, Long categoryId, Long technologyId, Long topicId,
 			String newQuestion) throws Exception {
-		cacheDomain.editTopicQuestion(mapperModelToDomain.userModelToUser(userModel), categoryId, technologyId, topicId,
+		cacheDomain.editTopicQuestion(username, categoryId, technologyId, topicId,
 				newQuestion);
 		findTopic(categoryId, technologyId, topicId).question = newQuestion;
 	}
@@ -97,30 +97,30 @@ public class CacheModelImpl implements CacheModel {
 		findTopic(categoryId, technologyId, topicId).addAnswer(answerModel);
 	}
 
-	public void rateAnswer(UserModel userModel, Long categoryId, Long technologyId, Long topicId, Long answerId,
+	public void rateAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId,
 			int rating) throws Exception {
-		cacheDomain.rateAnswer(mapperModelToDomain.userModelToUser(userModel), categoryId, technologyId, topicId,
+		cacheDomain.rateAnswer(username, categoryId, technologyId, topicId,
 				answerId, rating);
 		findAnswer(categoryId, technologyId, topicId, answerId).rating = rating;
 	}
 
-	public void pointAnswer(UserModel userModel, Long categoryId, Long technologyId, Long topicId, Long answerId,
+	public void pointAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId,
 			int points) throws Exception {
-		cacheDomain.pointAnswer(mapperModelToDomain.userModelToUser(userModel), categoryId, technologyId, topicId,
+		cacheDomain.pointAnswer(username, categoryId, technologyId, topicId,
 				answerId, points);
 		findAnswer(categoryId, technologyId, topicId, answerId).points = points;
 	}
 
-	public void editAnswer(UserModel userModel, Long categoryId, Long technologyId, Long topicId, Long answerId,
+	public void editAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId,
 			String newText) throws Exception {
-		cacheDomain.editAnswer(mapperModelToDomain.userModelToUser(userModel), categoryId, technologyId, topicId,
+		cacheDomain.editAnswer(username, categoryId, technologyId, topicId,
 				answerId, newText);
 		findAnswer(categoryId, technologyId, topicId, answerId).text = newText;
 	}
 
-	public void deleteAnswer(UserModel userModel, Long categoryId, Long technologyId, Long topicId, Long answerId)
+	public void deleteAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId)
 			throws Exception {
-		cacheDomain.deleteAnswer(mapperModelToDomain.userModelToUser(userModel), categoryId, technologyId, topicId,
+		cacheDomain.deleteAnswer(username, categoryId, technologyId, topicId,
 				answerId);
 		findTopic(categoryId, technologyId, topicId).removeAnswer(answerId);
 	}
@@ -143,7 +143,7 @@ public class CacheModelImpl implements CacheModel {
 			return io.vavr.collection.List.ofAll(categ.getTechnologies()).find(t -> t.getId() == technologyId).get();
 		} catch (NoSuchElementException ex) {
 			NoSuchElementException exception = new NoSuchElementException(
-					"Not found -> Technology Model with id: " + technologyId);
+					"Not found -> Technology Model with id: " + technologyId + " in category with id: " + categoryId);
 			throw exception;
 		}
 	}
@@ -154,7 +154,7 @@ public class CacheModelImpl implements CacheModel {
 			return io.vavr.collection.List.ofAll(technology.topics).find(t -> t.getId() == topicId).get();
 		} catch (NoSuchElementException ex) {
 			NoSuchElementException exception = new NoSuchElementException(
-					"Not found -> Topic Model with id: " + topicId);
+					"Not found -> Topic Model with id: " + topicId + " in technology with id: " + technologyId);
 			throw exception;
 		}
 	}
@@ -165,7 +165,7 @@ public class CacheModelImpl implements CacheModel {
 			return io.vavr.collection.List.ofAll(topic.answers).find(a -> a.id == answerId).get();
 		} catch (NoSuchElementException ex) {
 			NoSuchElementException exception = new NoSuchElementException(
-					"Not found -> Answer Model with id: " + answerId);
+					"Not found -> Answer Model with id: " + answerId + " in topic with id: " + topicId);
 			throw exception;
 		}
 	}

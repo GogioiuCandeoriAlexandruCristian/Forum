@@ -31,7 +31,7 @@ public class Category {
 			return technology;
 		} catch (NoSuchElementException ex) {
 			NoSuchElementException exception = new NoSuchElementException(
-					"Not found -> Technology with id: " + technologyId);
+					"Not found -> Technology with id: " + technologyId + " not found in category with id: " + id);
 			throw exception;
 		}
 	}

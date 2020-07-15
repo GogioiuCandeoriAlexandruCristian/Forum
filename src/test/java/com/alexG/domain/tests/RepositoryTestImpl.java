@@ -85,6 +85,21 @@ public class RepositoryTestImpl extends Repository {
 	}
 
 	@Override
+	public UserEntity findUserByUsername(String username) {
+		for (CategoryEntity categoryEntity : categs) {
+			for (TechnologyEntity tech : categoryEntity.getTechnologies()) {
+				for(TopicEntity topic : tech.getTopics()) {
+					for(AnswerEntity answer : topic.getAnswers()) {
+						if(answer.userCreator.getUsername().equals(username))
+							return answer.userCreator;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
 	public Optional<UserEntity> findUserById(Long userId) {
 		for (CategoryEntity categoryEntity : categs) {
 			for (TechnologyEntity tech : categoryEntity.getTechnologies()) {

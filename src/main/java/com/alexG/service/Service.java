@@ -15,9 +15,9 @@ public interface Service {
 
 	List<AnswerModel> getAnswers(Long categoryId, Long technologyId, Long topicId);
 
-	void addTopic(TopicModel topic, Long categoryId, Long technologyId);
+	void addTopic(TopicModel topic, String username, Long categoryId, Long technologyId);
 
-	void addTechnology(TechnologyModel technology, Long categoryId, String title);
+	void addTechnology(TechnologyModel technology, Long categoryId);
 
 	void changeTopicFromTechnolgy(Long categoryId, Long topicId, Long actualTechnologyId, Long newTechnologyId);
 
@@ -29,20 +29,20 @@ public interface Service {
 
 	void changeTechnologyTitle(Long categoryId, Long technologyId, String newTitle);
 
-	void editTopicQuestion(UserModel user, Long categoryId, Long technologyId, Long topicId, String newQuestion)
+	void editTopicQuestion(String username, Long categoryId, Long technologyId, Long topicId, String newQuestion)
 			throws Exception;
 
 	void addAnswer(AnswerModel answer, Long categoryId, Long technologyId, Long topicId);
 
-	void rateAnswer(UserModel user, Long categoryId, Long technologyId, Long topicId, Long answerId, int rating)
+	void rateAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId, int rating)
 			throws Exception;
 
-	void pointAnswer(UserModel user, Long categoryId, Long technologyId, Long topicId, Long answerId, int points)
+	void pointAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId, int points)
 			throws Exception;
 
-	void editAnswer(UserModel user, Long categoryId, Long technologyId, Long topicId, Long answerId, String newText)
+	void editAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId, String newText)
 			throws Exception;
 
-	void deleteAnswer(UserModel user, Long categoryId, Long technologyId, Long topicId, Long answerId) throws Exception;
+	void deleteAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId) throws Exception;
 
 }

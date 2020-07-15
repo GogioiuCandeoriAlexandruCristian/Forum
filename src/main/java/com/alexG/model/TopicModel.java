@@ -2,13 +2,13 @@ package com.alexG.model;
 
 import java.util.List;
 
-import com.alexG.domain.entities.User;
+import com.alexG.security.model.UserModel;
 
 public class TopicModel {
 	private Long id;
 	public String title;
 	public String question;
-	public User userCreator;
+	public UserModel userCreator;
 	public List<AnswerModel> answers;
 
 	public Long getId() {

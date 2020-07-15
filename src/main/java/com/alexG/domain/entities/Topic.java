@@ -41,7 +41,7 @@ public class Topic {
 	}
 
 	public boolean isUserCreatorForAnswer(User user, Long answerId) {
-		return getAnswer(answerId).isCreatorUser(user);
+		return getAnswer(answerId).isUserCreator(user);
 	}
 
 	public Answer getAnswer(Long answerId) {

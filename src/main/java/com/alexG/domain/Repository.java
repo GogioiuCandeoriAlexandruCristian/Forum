@@ -70,6 +70,10 @@ public class Repository {
 		return userRepo.findById(userId);
 	}
 
+	public UserEntity findUserByUsername(String username) {
+		return userRepo.findByUsername(username);
+	}
+
 	public Optional<TechnologyEntity> findTechnologyById(Long technologyId) {
 		return techRepo.findById(technologyId);
 	}

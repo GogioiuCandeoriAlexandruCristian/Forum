@@ -29,8 +29,8 @@ public class ServiceImpl implements Service {
 		return cacheModel.getAnswers(categoryId, technologyId, topicId);
 	}
 
-	public void addTopic(TopicModel topic, Long categoryId, Long technologyId) {
-		cacheModel.addTopic(topic, categoryId, technologyId);
+	public void addTopic(TopicModel topic, String username,  Long categoryId, Long technologyId) {
+		cacheModel.addTopic(topic, username, categoryId, technologyId);
 	}
 
 	public void changeTopicFromTechnolgy(Long categoryId, Long topicId, Long actualTechnologyId, Long newTechnologyId) {
@@ -53,37 +53,37 @@ public class ServiceImpl implements Service {
 		cacheModel.changeTechnologyTitle(categoryId, technologyId, newTitle);
 	}
 
-	public void editTopicQuestion(UserModel user, Long categoryId, Long technologyId, Long topicId, String newQuestion)
+	public void editTopicQuestion(String username, Long categoryId, Long technologyId, Long topicId, String newQuestion)
 			throws Exception {
-		cacheModel.editTopicQuestion(user, categoryId, technologyId, topicId, newQuestion);
+		cacheModel.editTopicQuestion(username, categoryId, technologyId, topicId, newQuestion);
 	}
 
 	public void addAnswer(AnswerModel answer, Long categoryId, Long technologyId, Long topicId) {
 		cacheModel.addAnswer(answer, categoryId, technologyId, topicId);
 	}
 
-	public void rateAnswer(UserModel user, Long categoryId, Long technologyId, Long topicId, Long answerId, int rating)
+	public void rateAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId, int rating)
 			throws Exception {
-		cacheModel.rateAnswer(user, categoryId, technologyId, topicId, answerId, rating);
+		cacheModel.rateAnswer(username, categoryId, technologyId, topicId, answerId, rating);
 	}
 
-	public void pointAnswer(UserModel user, Long categoryId, Long technologyId, Long topicId, Long answerId, int points)
+	public void pointAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId, int points)
 			throws Exception {
-		cacheModel.pointAnswer(user, categoryId, technologyId, topicId, answerId, points);
+		cacheModel.pointAnswer(username, categoryId, technologyId, topicId, answerId, points);
 	}
 
-	public void editAnswer(UserModel user, Long categoryId, Long technologyId, Long topicId, Long answerId,
+	public void editAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId,
 			String newText) throws Exception {
-		cacheModel.editAnswer(user, categoryId, technologyId, topicId, answerId, newText);
+		cacheModel.editAnswer(username, categoryId, technologyId, topicId, answerId, newText);
 	}
 
-	public void deleteAnswer(UserModel user, Long categoryId, Long technologyId, Long topicId, Long answerId)
+	public void deleteAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId)
 			throws Exception {
-		cacheModel.deleteAnswer(user, categoryId, technologyId, topicId, answerId);
+		cacheModel.deleteAnswer(username, categoryId, technologyId, topicId, answerId);
 	}
 
-	public void addTechnology(TechnologyModel technology, Long categoryId, String title) {
-		cacheModel.addTechnology(technology, categoryId, title);
+	public void addTechnology(TechnologyModel technology, Long categoryId) {
+		cacheModel.addTechnology(technology, categoryId);
 	}
 
 }

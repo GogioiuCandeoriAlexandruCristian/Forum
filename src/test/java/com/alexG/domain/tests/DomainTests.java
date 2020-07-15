@@ -36,25 +36,25 @@ public class DomainTests {
 		assertEquals(answer.getRating(), 0);
 		assertEquals(repo.findAnswerById(answerId).get().getRating(), 0);
 
-		cacheDomain.rateAnswer(user, categoryId, technologyId, topicId, answerId, 3);
+		cacheDomain.rateAnswer(user.getUsername(), categoryId, technologyId, topicId, answerId, 3);
 	
 		answer =  repo.findAnswer(categories, categoryId, technologyId, topicId, answerId);
 		assertEquals(answer.getRating(), 3);
 		assertEquals(repo.findAnswerById(answerId).get().getRating(), 3);
 	
-		org.junit.jupiter.api.Assertions.assertThrows(Exception.class, () -> cacheDomain.rateAnswer(user, categoryId, technologyId, topicId, answerId, 6));
+		org.junit.jupiter.api.Assertions.assertThrows(Exception.class, () -> cacheDomain.rateAnswer(user.getUsername(), categoryId, technologyId, topicId, answerId, 6));
 		answer =  repo.findAnswer(categories, categoryId, technologyId, topicId, answerId);
 		assertEquals(answer.getRating(), 3);
 		assertEquals(repo.findAnswerById(answerId).get().getRating(), 3);
 	
-		org.junit.jupiter.api.Assertions.assertThrows(Exception.class, () -> cacheDomain.rateAnswer(user, categoryId, technologyId, topicId, answerId, -1));
+		org.junit.jupiter.api.Assertions.assertThrows(Exception.class, () -> cacheDomain.rateAnswer(user.getUsername(), categoryId, technologyId, topicId, answerId, -1));
 		answer =  repo.findAnswer(categories, categoryId, technologyId, topicId, answerId);
 		assertEquals(answer.getRating(), 3);
 		assertEquals(repo.findAnswerById(answerId).get().getRating(), 3);
 
 		User user1 = new User();
 		user1.setUsername("wrongUser");
-		org.junit.jupiter.api.Assertions.assertThrows(Exception.class, () -> cacheDomain.rateAnswer(user1, categoryId, technologyId, topicId, answerId, 3));
+		org.junit.jupiter.api.Assertions.assertThrows(Exception.class, () -> cacheDomain.rateAnswer(user1.getUsername(), categoryId, technologyId, topicId, answerId, 3));
 		answer =  repo.findAnswer(categories, categoryId, technologyId, topicId, answerId);
 		assertEquals(answer.getRating(), 3);
 		assertEquals(repo.findAnswerById(answerId).get().getRating(), 3);
@@ -73,25 +73,25 @@ public class DomainTests {
 		assertEquals(answer.userCreator.getPoints(), 0);
 		assertEquals(repo.findAnswerById(answerId).get().userCreator.getPoints(), 0);
 
-		cacheDomain.pointAnswer(user, categoryId, technologyId, topicId, answerId, 3);
+		cacheDomain.pointAnswer(user.getUsername(), categoryId, technologyId, topicId, answerId, 3);
 	
 		answer =  repo.findAnswer(categories, categoryId, technologyId, topicId, answerId);
 		assertEquals(answer.userCreator.getPoints(), 3);
 		assertEquals(repo.findAnswerById(answerId).get().userCreator.getPoints(), 3);
 	
-		org.junit.jupiter.api.Assertions.assertThrows(Exception.class, () -> cacheDomain.rateAnswer(user, categoryId, technologyId, topicId, answerId, 6));
+		org.junit.jupiter.api.Assertions.assertThrows(Exception.class, () -> cacheDomain.rateAnswer(user.getUsername(), categoryId, technologyId, topicId, answerId, 6));
 		answer =  repo.findAnswer(categories, categoryId, technologyId, topicId, answerId);
 		assertEquals(answer.userCreator.getPoints(), 3);
 		assertEquals(repo.findAnswerById(answerId).get().userCreator.getPoints(), 3);
 	
-		org.junit.jupiter.api.Assertions.assertThrows(Exception.class, () -> cacheDomain.rateAnswer(user, categoryId, technologyId, topicId, answerId, -1));
+		org.junit.jupiter.api.Assertions.assertThrows(Exception.class, () -> cacheDomain.rateAnswer(user.getUsername(), categoryId, technologyId, topicId, answerId, -1));
 		answer =  repo.findAnswer(categories, categoryId, technologyId, topicId, answerId);
 		assertEquals(answer.userCreator.getPoints(), 3);
 		assertEquals(repo.findAnswerById(answerId).get().userCreator.getPoints(), 3);
 	
 		User user1 = new User();
 		user1.setUsername("wrongUser");
-		org.junit.jupiter.api.Assertions.assertThrows(Exception.class, () -> cacheDomain.pointAnswer(user1, categoryId, technologyId, topicId, answerId, 3));
+		org.junit.jupiter.api.Assertions.assertThrows(Exception.class, () -> cacheDomain.pointAnswer(user1.getUsername(), categoryId, technologyId, topicId, answerId, 3));
 		answer =  repo.findAnswer(categories, categoryId, technologyId, topicId, answerId);
 		assertEquals(answer.userCreator.getPoints(), 3);
 		assertEquals(repo.findAnswerById(answerId).get().userCreator.getPoints(), 3);

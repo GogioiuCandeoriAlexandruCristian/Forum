@@ -19,7 +19,7 @@ public class Answer {
 		text = textAnswer;
 	}
 
-	public boolean isCreatorUser(User user) {
+	public boolean isUserCreator(User user) {
 		return user.getUsername() == userCreator.getUsername();
 	}
 

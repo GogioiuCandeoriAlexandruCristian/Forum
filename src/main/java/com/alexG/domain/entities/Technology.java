@@ -35,7 +35,7 @@ public class Technology {
 			Topic topic = io.vavr.collection.List.ofAll(topics).find(t -> t.getId() == topicId).get();
 			return topic;
 		} catch (NoSuchElementException ex) {
-			NoSuchElementException exception = new NoSuchElementException("Not found -> topic with id: " + topicId);
+			NoSuchElementException exception = new NoSuchElementException("Not found -> topic with id: " + topicId + " in technology with id: " + id);
 			throw exception;
 		}
 	}
