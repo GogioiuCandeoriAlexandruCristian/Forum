@@ -8,7 +8,7 @@ body-raw(JSON):
     "username":"test",
     "email":"alexx@gmail.com",
     "password":"parola123",
-    "points":0
+    "role":["admin", "user"]
 }
 
 Step 2:Postman request (POST): http://localhost:8080/api/auth/signin
