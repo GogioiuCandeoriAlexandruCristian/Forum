@@ -40,8 +40,7 @@ public class UserEntity {
 	@Size(max = 120)
 	private String password;
 
-	@NotBlank
-	private int points;
+	private int points = 0;
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
