@@ -8,7 +8,7 @@ public interface CacheModel {
 
 	List<CategoryModel> findAllCategories();
 
-	List<TechnologyModel> findTechnologies(Long id);
+	List<TechnologyModel> findTechnologies(Long categoryId);
 
 	List<AnswerModel> getAnswers(Long categoryId, Long technologyId, Long topicId);
 

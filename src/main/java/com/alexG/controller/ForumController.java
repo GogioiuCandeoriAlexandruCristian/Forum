@@ -35,7 +35,12 @@ public class ForumController {
 	@GetMapping("/technologies")
 	public Response<List<TechnologyModel>> getAllTechnologies(
 			@RequestParam(name = "categId", required = true) Long categId) {
-		return new Response(service.getAllTechnologies(categId), null, false);
+		try {
+			return new Response(service.getAllTechnologies(categId), null, false);
+		} catch (Exception ex) {
+			return new Response(null, ex.getMessage(), true);
+		}
+		
 	}
 
 

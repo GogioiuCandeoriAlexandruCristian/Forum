@@ -13,8 +13,6 @@ import com.alexG.domain.entities.Technology;
 import com.alexG.domain.entities.Topic;
 import com.alexG.security.model.UserModel;
 
-import io.vavr.control.Option;
-
 @Component
 public class CacheModelImpl implements CacheModel {
 
@@ -36,12 +34,9 @@ public class CacheModelImpl implements CacheModel {
 		return categoriesCache;
 	}
 
-	public List<TechnologyModel> findTechnologies(Long id) {
-		Option<CategoryModel> optionCategModel = io.vavr.collection.List.ofAll(categoriesCache)
-				.find(categ -> categ.id == id);
-		if (optionCategModel.isDefined())
-			return optionCategModel.get().getTechnologies();
-		return null;
+	public List<TechnologyModel> findTechnologies(Long categoryId) {
+		CategoryModel categModel = findCategory(categoryId);
+		return categModel.getTechnologies();
 	}
 
 	public List<AnswerModel> getAnswers(Long categoryId, Long technologyId, Long topicId) {

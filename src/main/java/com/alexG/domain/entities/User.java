@@ -3,8 +3,6 @@ package com.alexG.domain.entities;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.alexG.security.model.RoleModel;
-
 public class User {
 	private Long id;
 
