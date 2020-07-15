@@ -106,7 +106,8 @@ public class CacheDomainImpl implements CacheDomain {
 	}
 
 	public Answer addAnswer(Answer answer, Long categoryId, Long technologyId, Long topicId) {
-		AnswerEntity answerEntity = new AnswerEntity(answer.text, findTopicEntity(topicId), findUserEntity(answer.userCreator.getId()));
+		AnswerEntity answerEntity = new AnswerEntity(answer.text, findTopicEntity(topicId),
+				findUserEntity(answer.userCreator.getId()));
 		repo.saveAnswer(answerEntity);
 		answer.setId(answerEntity.getId());
 		Topic topic = findTopic(categoryId, technologyId, topicId);
@@ -119,7 +120,7 @@ public class CacheDomainImpl implements CacheDomain {
 		Answer answer = findAnswer(categoryId, technologyId, topicId, answerId);
 		if (answer.isCreatorUser(user)) {
 			AnswerEntity answerEntity = findAnswerEntity(answerId);
-			if(answer.isRatingOk(rating)) {
+			if (answer.isRatingOk(rating)) {
 				answerEntity.setRating(rating);
 				repo.saveAnswer(answerEntity);
 				answer.setRating(rating);
@@ -135,10 +136,14 @@ public class CacheDomainImpl implements CacheDomain {
 			throws Exception {
 		Answer answer = findAnswer(categoryId, technologyId, topicId, answerId);
 		if (answer.isCreatorUser(user)) {
-			AnswerEntity answerEntity = findAnswerEntity(answerId);
-			answerEntity.setPoints(points);
-			repo.saveAnswer(answerEntity);
-			answer.setPoints(points);
+			if (user.isPointingOk(points)) {
+				UserEntity userEnt = findUserEntity(answer.userCreator.getId());
+				userEnt.addPoints(points);
+				repo.saveUser(userEnt);
+				answer.userCreator.addPoints(points);
+			} else {
+				throw new Exception("This pointing is invalid");
+			}
 		} else {
 			throw new Exception("This user can't point this answer");
 		}

@@ -31,11 +31,6 @@ public class Topic {
 		answer.setRating(rating);
 	}
 
-	public void pointAnswer(Long answerId, int points) {
-		Answer answer = getAnswer(answerId);
-		answer.setPoints(points);
-	}
-
 	public void deleteAnswer(Long answerId) {
 		Answer answer = getAnswer(answerId);
 		answers.remove(answer);

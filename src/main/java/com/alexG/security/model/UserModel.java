@@ -12,6 +12,8 @@ public class UserModel {
 
 	private String password;
 
+	private int points;
+
 	private Set<RoleModel> roles = new HashSet<>();
 
 	public UserModel() {
@@ -61,5 +63,13 @@ public class UserModel {
 
 	public void setRoles(Set<RoleModel> roles) {
 		this.roles = roles;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
 	}
 }

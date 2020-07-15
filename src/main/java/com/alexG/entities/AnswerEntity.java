@@ -18,7 +18,6 @@ public class AnswerEntity {
 	@NotBlank
 	private String text;
 	private int rating;
-	private int points;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -58,14 +57,6 @@ public class AnswerEntity {
 
 	public void setRating(int rating) {
 		this.rating = rating;
-	}
-
-	public int getPoints() {
-		return points;
-	}
-
-	public void setPoints(int points) {
-		this.points = points;
 	}
 
 	public UserEntity getUserCreator() {

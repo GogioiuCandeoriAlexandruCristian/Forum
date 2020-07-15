@@ -40,6 +40,9 @@ public class UserEntity {
 	@Size(max = 120)
 	private String password;
 
+	@NotBlank
+	private int points;
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<RoleEntity> roles = new HashSet<>();
@@ -113,6 +116,14 @@ public class UserEntity {
 
 	public void setAnswers(List<AnswerEntity> answers) {
 		this.answers = answers;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public void addPoints(int points) {
+		this.points += points;
 	}
 	
 }

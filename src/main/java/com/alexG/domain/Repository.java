@@ -81,4 +81,8 @@ public class Repository {
 	public Optional<AnswerEntity> findAnswerById(Long answerId) {
 		return answerRepo.findById(answerId);
 	}
+
+	public void saveUser(UserEntity userEnt) {
+		userRepo.save(userEnt);
+	}
 }

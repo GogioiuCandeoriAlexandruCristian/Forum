@@ -5,24 +5,14 @@ public class Answer {
 	public String text;
 	public User userCreator;
 	private int rating;
-	private int points;
 
 	public void setRating(int rating) {
-		if (isPointingOk(rating))
+		if (isRatingOk(rating))
 			this.rating = rating;
 	}
 
 	public int getRating() {
 		return rating;
-	}
-
-	public int getPoints() {
-		return points;
-	}
-
-	public void setPoints(int points) {
-		if (isPointingOk(points))
-			this.points = points;
 	}
 
 	public void editText(String textAnswer) {
@@ -47,9 +37,4 @@ public class Answer {
 		return false;
 	}
 
-	public boolean isPointingOk(int points) {
-		if (1 <= points && points <= 5)
-			return true;
-		return false;
-	}
 }

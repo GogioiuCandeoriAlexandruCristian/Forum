@@ -12,6 +12,8 @@ public class User {
 
 	private String password;
 
+	private int points;
+
 	private Set<Role> roles = new HashSet<>();
 
 	public Long getId() {
@@ -52,5 +54,19 @@ public class User {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public void addPoints(int points) {
+		this.points += points;
+	}
+
+	public boolean isPointingOk(int points) {
+		if (1 <= points && points <= 5)
+			return true;
+		return false;
 	}
 }

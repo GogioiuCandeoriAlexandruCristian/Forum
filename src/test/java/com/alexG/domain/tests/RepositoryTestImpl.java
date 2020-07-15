@@ -66,57 +66,37 @@ public class RepositoryTestImpl extends Repository {
 	}
 
 	@Override
-	public void saveCategory(CategoryEntity categoryEntity) {
-
-	}
-
-	@Override
-	public Optional<CategoryEntity> findCategoryById(Long categoryId) {
-		return null;
-	}
-
-	@Override
 	public List<CategoryEntity> findAllCategories() {
 		return categs;
 	}
 
 	@Override
-	public void saveTopic(TopicEntity topicEntity) {
-	}
-
-	@Override
-	public void saveTechnology(TechnologyEntity techEntity) {
-	}
-
-	@Override
-	public void deleteTechnologyById(Long technologyId) {
-	}
-
-	@Override
-	public void deleteTopicById(Long topicId) {
-	}
-
-	@Override
-	public void saveAnswer(AnswerEntity answerEntity) {
-	}
-
-	@Override
-	public void deleteAnswerById(Long answerId) {
+	public void saveUser(UserEntity userEnt) {
+		for (CategoryEntity categoryEntity : categs) {
+			for (TechnologyEntity tech : categoryEntity.getTechnologies()) {
+				for(TopicEntity topic : tech.getTopics()) {
+					for(AnswerEntity answer : topic.getAnswers()) {
+						if(answer.userCreator!= null && answer.userCreator.getId() == userEnt.getId())
+							answer.userCreator = userEnt;
+					}
+				}
+			}
+		}
 	}
 
 	@Override
 	public Optional<UserEntity> findUserById(Long userId) {
-		return null;
-	}
-
-	@Override
-	public Optional<TechnologyEntity> findTechnologyById(Long technologyId) {
-		return null;
-	}
-
-	@Override
-	public Optional<TopicEntity> findTopicById(Long topicId) {
-		return null;
+		for (CategoryEntity categoryEntity : categs) {
+			for (TechnologyEntity tech : categoryEntity.getTechnologies()) {
+				for(TopicEntity topic : tech.getTopics()) {
+					for(AnswerEntity answer : topic.getAnswers()) {
+						if(answer.userCreator.getId() == userId)
+							return Optional.of(answer.userCreator);
+					}
+				}
+			}
+		}
+		return Optional.empty();
 	}
 
 	@Override
