@@ -6,6 +6,6 @@ import com.alexG.domain.entities.Category;
 
 public interface CacheDomain {
 
-	List<Category> findAllCategories();
+	List<Category> getCategories();
 
 }

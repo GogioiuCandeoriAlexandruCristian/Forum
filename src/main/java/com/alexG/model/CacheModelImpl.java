@@ -22,7 +22,7 @@ public class CacheModelImpl implements CacheModel {
 	@Autowired
 	public CacheModelImpl(CacheDomain cacheDomain) {
 		this.cacheDomain = cacheDomain;
-		categoriesCache = mapper.categoriesToCategoryModel(cacheDomain.findAllCategories());
+		categoriesCache = mapper.categoriesToCategoryModel(this.cacheDomain.getCategories());
 	}
 
 	@Override

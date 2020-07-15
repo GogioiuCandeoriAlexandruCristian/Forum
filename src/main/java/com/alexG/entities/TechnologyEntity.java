@@ -1,5 +1,7 @@
 package com.alexG.entities;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -7,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -25,8 +28,16 @@ public class TechnologyEntity {
 	private String title;
 
 	@ManyToOne
-	@JoinColumn(name="categ_id")
+	@JoinColumn(name = "categ_id")
 	private CategoryEntity category;
+
+	@OneToMany(mappedBy = "technology")
+	private List<TopicEntity> topics;
+
+	public TechnologyEntity(String title, CategoryEntity category) {
+		this.title = title;
+		this.category = category;
+	}
 
 	public Long getId() {
 		return id;

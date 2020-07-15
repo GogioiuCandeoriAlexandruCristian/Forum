@@ -1,6 +1,7 @@
 package com.alexG.entities;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -41,6 +43,12 @@ public class UserEntity {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<RoleEntity> roles = new HashSet<>();
+
+	@OneToMany(mappedBy="userCreator")
+	private List<TopicEntity> topics;
+
+	@OneToMany(mappedBy="userCreator")
+	private List<AnswerEntity> answers;
 
 	public UserEntity() {
 	}
