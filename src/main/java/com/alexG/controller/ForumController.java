@@ -40,9 +40,7 @@ public class ForumController {
 		} catch (Exception ex) {
 			return new Response(null, ex.getMessage(), true);
 		}
-		
 	}
-
 
 	@PostMapping("/answer/delete")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")

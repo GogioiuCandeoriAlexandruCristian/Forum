@@ -9,8 +9,8 @@ public class Category {
 	public List<Technology> technologies;
 
 	public void deleteTechnology(Long technologyId) {
-		Technology optionTechnology = findTechnology(technologyId);
-		technologies.remove(optionTechnology);
+		Technology tech = findTechnology(technologyId);
+		technologies.remove(tech);
 	}
 
 	public void changeTitle(String newTitle) {

@@ -56,7 +56,7 @@ public class CacheDomainImpl implements CacheDomain {
 	}
 
 	public Topic addTopic(Topic topic, Long categoryId, Long technologyId) {
-		TopicEntity topicEntity = new TopicEntity(topic.title, topic.question,
+		TopicEntity topicEntity = new TopicEntity(topic.title, topic.question, findTechnologyEntity(technologyId),
 				findUserEntity(topic.userCreator.getId()));
 		topicRepo.save(topicEntity);
 		topic.setId(topicEntity.getId());
@@ -103,10 +103,10 @@ public class CacheDomainImpl implements CacheDomain {
 	}
 
 	public void changeTechnologyTitle(Long categoryId, Long technologyId, String newTitle) {
-		Technology technlogy = findTechnology(categoryId, technologyId);
 		TechnologyEntity techEntity = findTechnologyEntity(technologyId);
 		techEntity.setTitle(newTitle);
 		techRepo.save(techEntity);
+		Technology technlogy = findTechnology(categoryId, technologyId);
 		technlogy.changeTitle(newTitle);
 	}
 
@@ -124,10 +124,10 @@ public class CacheDomainImpl implements CacheDomain {
 	}
 
 	public Answer addAnswer(Answer answer, Long categoryId, Long technologyId, Long topicId) {
-		Topic topic = findTopic(categoryId, technologyId, topicId);
-		AnswerEntity answerEntity = new AnswerEntity(answer.text, findUserEntity(answer.creatorUser.getId()));
+		AnswerEntity answerEntity = new AnswerEntity(answer.text, findTopicEntity(topicId), findUserEntity(answer.creatorUser.getId()));
 		answerRepo.save(answerEntity);
 		answer.setId(answerEntity.getId());
+		Topic topic = findTopic(categoryId, technologyId, topicId);
 		topic.addAnswer(answer);
 		return answer;
 	}

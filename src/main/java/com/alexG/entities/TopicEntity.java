@@ -33,15 +33,17 @@ public class TopicEntity {
 	@JoinColumn(name = "user_id")
 	private UserEntity userCreator;
 
-	@OneToMany(mappedBy = "topic", cascade= { CascadeType.REMOVE }, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "topic", cascade = { CascadeType.REMOVE }, fetch = FetchType.EAGER)
 	private List<AnswerEntity> answers;
 
-	public TopicEntity() {}
+	public TopicEntity() {
+	}
 
-	public TopicEntity(String title, String question, UserEntity userCreator) {
+	public TopicEntity(String title, String question, TechnologyEntity technology, UserEntity userCreator) {
 		this.question = question;
 		this.title = title;
 		this.userCreator = userCreator;
+		this.technology = technology;
 	}
 
 	public String getTitle() {

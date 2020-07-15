@@ -30,9 +30,10 @@ public class AnswerEntity {
 
 	public AnswerEntity() {}
 
-	public AnswerEntity(String text, UserEntity userCreator) {
+	public AnswerEntity(String text, TopicEntity topic, UserEntity userCreator) {
 		this.text = text;
 		this.userCreator = userCreator;
+		this.topic = topic;
 	}
 
 	public Long getId() {
