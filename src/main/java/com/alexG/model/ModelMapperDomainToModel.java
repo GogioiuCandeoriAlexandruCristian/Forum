@@ -3,6 +3,7 @@ package com.alexG.model;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import com.alexG.domain.entities.Answer;
 import com.alexG.domain.entities.Category;
@@ -25,6 +26,7 @@ public interface ModelMapperDomainToModel {
 
 	AnswerModel answerToAnswerModel(Answer answer);
 
+	@Mapping(target = "password", ignore = true)
 	UserModel userToUserModel(User user);
 	
 	RoleModel roleToRoleModel(Role role);

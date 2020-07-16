@@ -124,7 +124,7 @@ public class CacheModelImpl implements CacheModel {
 		Answer answer = cacheDomain.addAnswer(mapperModelToDomain.answerModelToAnswer(answerModel), username, categoryId,
 				technologyId, topicId);
 		answerModel.setId(answer.getId());
-		answerModel.creatorUser = mapperDomnainToModel.userToUserModel(answer.userCreator);
+		answerModel.userCreator = mapperDomnainToModel.userToUserModel(answer.userCreator);
 		findTopic(categoryId, technologyId, topicId).addAnswer(answerModel);
 	}
 
@@ -137,7 +137,7 @@ public class CacheModelImpl implements CacheModel {
 	public void pointAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId,
 			int points) throws Exception {
 		cacheDomain.pointAnswer(username, categoryId, technologyId, topicId, answerId, points);
-		findAnswer(categoryId, technologyId, topicId, answerId).points = points;
+		findAnswer(categoryId, technologyId, topicId, answerId).userCreator.addPoints(points);
 	}
 
 	public void editAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId,

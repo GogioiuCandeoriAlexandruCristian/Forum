@@ -1,6 +1,7 @@
 package com.alexG.domain;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import com.alexG.domain.entities.Role;
 import com.alexG.domain.entities.User;
@@ -13,6 +14,7 @@ public interface ModelMapperUserEntityToUser {
 
 	Role roleEntityToRole(RoleEntity role);
 
+	@Mapping(target = "password", ignore = true)
 	UserEntity userToUserEntity(User user);
 
 	RoleEntity roleToRoleEntity(User user);
