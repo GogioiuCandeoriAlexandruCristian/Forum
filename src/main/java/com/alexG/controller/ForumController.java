@@ -42,24 +42,24 @@ public class ForumController {
 
 	@GetMapping("/technologies")
 	public Response<List<TechnologyModel>> getAllTechnologies(
-			@RequestParam(name = "categId", required = true) Long categId) {
+			@RequestParam(name = "categoryId", required = true) Long categoryId) {
 		try {
-			return new Response<List<TechnologyModel>>(service.getAllTechnologies(categId), null, false);
+			return new Response<List<TechnologyModel>>(service.getAllTechnologies(categoryId), null, false);
 		} catch (Exception ex) {
 			return new Response<List<TechnologyModel>>(null, ex.getMessage(), true);
 		}
 	}
 
-	@PostMapping("/answer")
+	@GetMapping("/answer")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public Response getAnswers(@RequestParam(name = "categId", required = true) Long categoryId,
+	public Response<List<AnswerModel>> getAnswers(@RequestParam(name = "categoryId", required = true) Long categoryId,
 			@RequestParam(name = "technologyId", required = true) Long technologyId,
 			@RequestParam(name = "topicId", required = true) Long topicId) {
 		try {
-			service.getAnswers(categoryId, technologyId, topicId);
-			return new Response(null, null, false);
+			List<AnswerModel> answers = service.getAnswers(categoryId, technologyId, topicId);
+			return new Response<List<AnswerModel>>(answers, null, false);
 		} catch (Exception ex) {
-			return new Response(null, ex.getMessage(), true);
+			return new Response<List<AnswerModel>>(null, ex.getMessage(), true);
 		}
 	}
 
@@ -104,10 +104,10 @@ public class ForumController {
 
 	@PostMapping("/categ")
 	@PreAuthorize("hasRole('ADMIN')")
-	public Response changeCategTitle(@RequestParam(name = "categId", required = true) Long categId,
+	public Response changeCategTitle(@RequestParam(name = "categoryId", required = true) Long categoryId,
 			@RequestParam(name = "newTitle", required = true) String newTitle) {
 		try {
-			service.changeCategTitle(categId, newTitle);
+			service.changeCategTitle(categoryId, newTitle);
 			return new Response(null, null, false);
 		} catch (Exception ex) {
 			return new Response(null, ex.getMessage(), true);
@@ -116,10 +116,10 @@ public class ForumController {
 
 	@PostMapping("/technology/delete")
 	@PreAuthorize("hasRole('ADMIN')")
-	public Response deleteTechnology(@RequestParam(name = "categId", required = true) Long categId,
+	public Response deleteTechnology(@RequestParam(name = "categoryId", required = true) Long categoryId,
 			@RequestParam(name = "technologyId", required = true) Long technologyId) {
 		try {
-			service.deleteTechnology(categId, technologyId);
+			service.deleteTechnology(categoryId, technologyId);
 			return new Response(null, null, false);
 		} catch (Exception ex) {
 			return new Response(null, ex.getMessage(), true);

@@ -165,34 +165,16 @@ public class CacheModelImpl implements CacheModel {
 
 	private TechnologyModel findTechnology(Long categoryId, Long technologyId) {
 		CategoryModel categ = findCategory(categoryId);
-		try {
-			return io.vavr.collection.List.ofAll(categ.getTechnologies()).find(t -> t.getId() == technologyId).get();
-		} catch (NoSuchElementException ex) {
-			NoSuchElementException exception = new NoSuchElementException(
-					"Not found -> Technology Model with id: " + technologyId + " in category with id: " + categoryId);
-			throw exception;
-		}
+		return categ.findTechnology(technologyId);
 	}
 
 	private TopicModel findTopic(Long categoryId, Long technologyId, Long topicId) {
 		TechnologyModel technology = findTechnology(categoryId, technologyId);
-		try {
-			return io.vavr.collection.List.ofAll(technology.topics).find(t -> t.getId() == topicId).get();
-		} catch (NoSuchElementException ex) {
-			NoSuchElementException exception = new NoSuchElementException(
-					"Not found -> Topic Model with id: " + topicId + " in technology with id: " + technologyId);
-			throw exception;
-		}
+		return technology.findTopic(topicId);
 	}
 
 	private AnswerModel findAnswer(Long categoryId, Long technologyId, Long topicId, Long answerId) {
 		TopicModel topic = findTopic(categoryId, technologyId, topicId);
-		try {
-			return io.vavr.collection.List.ofAll(topic.answers).find(a -> a.id == answerId).get();
-		} catch (NoSuchElementException ex) {
-			NoSuchElementException exception = new NoSuchElementException(
-					"Not found -> Answer Model with id: " + answerId + " in topic with id: " + topicId);
-			throw exception;
-		}
+		return topic.findAnswer(answerId);
 	}
 }

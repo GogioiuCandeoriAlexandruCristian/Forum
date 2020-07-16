@@ -1,6 +1,7 @@
 package com.alexG.model;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class TechnologyModel {
 	private Long id;
@@ -20,6 +21,17 @@ public class TechnologyModel {
 	}
 
 	public void removeTopic(Long topicId) {
-		io.vavr.collection.List.ofAll(topics).removeFirst(t -> t.getId() == topicId);
+		topics.remove(findTopic(topicId));
 	}
+
+	public TopicModel findTopic(Long topicId) {
+		try {
+			return io.vavr.collection.List.ofAll(topics).find(t -> t.getId() == topicId).get();
+		} catch (NoSuchElementException ex) {
+			NoSuchElementException exception = new NoSuchElementException(
+					"Not found -> Topic Model with id: " + topicId + " in technology with id: " + id);
+			throw exception;
+		}
+	}
+
 }

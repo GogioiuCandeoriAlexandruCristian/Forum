@@ -1,6 +1,7 @@
 package com.alexG.model;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.alexG.security.model.UserModel;
 
@@ -24,6 +25,17 @@ public class TopicModel {
 	}
 
 	public void removeAnswer(Long answerId) {
-		io.vavr.collection.List.ofAll(answers).removeFirst(a -> a.getId() == answerId);
+		answers.remove(findAnswer(answerId));
+	}
+
+
+	public AnswerModel findAnswer(Long answerId) {
+		try {
+			return io.vavr.collection.List.ofAll(answers).find(a -> a.id == answerId).get();
+		} catch (NoSuchElementException ex) {
+			NoSuchElementException exception = new NoSuchElementException(
+					"Not found -> Answer Model with id: " + answerId + " in topic with id: " + id);
+			throw exception;
+		}
 	}
 }
