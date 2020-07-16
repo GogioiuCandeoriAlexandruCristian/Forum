@@ -27,6 +27,10 @@ public interface ModelMapperDomainToModel {
 	AnswerModel answerToAnswerModel(Answer answer);
 
 	@Mapping(target = "password", ignore = true)
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "username", ignore = true)
+	@Mapping(target = "email", ignore = true)
+	@Mapping(target = "roles", ignore = true)
 	UserModel userToUserModel(User user);
 	
 	RoleModel roleToRoleModel(Role role);

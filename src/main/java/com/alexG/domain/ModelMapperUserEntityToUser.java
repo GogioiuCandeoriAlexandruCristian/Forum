@@ -14,7 +14,6 @@ public interface ModelMapperUserEntityToUser {
 
 	Role roleEntityToRole(RoleEntity role);
 
-	@Mapping(target = "password", ignore = true)
 	UserEntity userToUserEntity(User user);
 
 	RoleEntity roleToRoleEntity(User user);
