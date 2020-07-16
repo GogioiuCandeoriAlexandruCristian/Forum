@@ -28,7 +28,7 @@ public interface CacheDomain {
 	void editTopicQuestion(String username, Long categoryId, Long technologyId, Long topicId, String newQuestion)
 			throws Exception;
 
-	Answer addAnswer(Answer answer, Long categoryId, Long technologyId, Long topicId);
+	Answer addAnswer(Answer answer, String username, Long categoryId, Long technologyId, Long topicId);
 
 	void rateAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId, int rating)
 			throws Exception;

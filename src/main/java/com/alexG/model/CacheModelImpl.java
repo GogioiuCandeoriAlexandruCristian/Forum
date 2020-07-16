@@ -120,10 +120,11 @@ public class CacheModelImpl implements CacheModel {
 		findTopic(categoryId, technologyId, topicId).question = newQuestion;
 	}
 
-	public void addAnswer(AnswerModel answerModel, Long categoryId, Long technologyId, Long topicId) {
-		Answer answer = cacheDomain.addAnswer(mapperModelToDomain.answerModelToAnswer(answerModel), categoryId,
+	public void addAnswer(AnswerModel answerModel, String username, Long categoryId, Long technologyId, Long topicId) {
+		Answer answer = cacheDomain.addAnswer(mapperModelToDomain.answerModelToAnswer(answerModel), username, categoryId,
 				technologyId, topicId);
 		answerModel.setId(answer.getId());
+		answerModel.creatorUser = mapperDomnainToModel.userToUserModel(answer.userCreator);
 		findTopic(categoryId, technologyId, topicId).addAnswer(answerModel);
 	}
 

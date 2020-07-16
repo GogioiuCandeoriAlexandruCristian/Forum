@@ -57,8 +57,8 @@ public class ServiceImpl implements Service {
 		cacheModel.editTopicQuestion(username, categoryId, technologyId, topicId, newQuestion);
 	}
 
-	public void addAnswer(AnswerModel answer, Long categoryId, Long technologyId, Long topicId) {
-		cacheModel.addAnswer(answer, categoryId, technologyId, topicId);
+	public void addAnswer(AnswerModel answer, String username, Long categoryId, Long technologyId, Long topicId) {
+		cacheModel.addAnswer(answer, username, categoryId, technologyId, topicId);
 	}
 
 	public void rateAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId, int rating)

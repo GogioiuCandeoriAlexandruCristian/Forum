@@ -173,9 +173,11 @@ public class ForumController {
 	public Response addAnswer(@Valid @RequestBody AnswerModel answer,
 			@RequestParam(name = "categoryId", required = true) Long categoryId,
 			@RequestParam(name = "technologyId", required = true) Long technologyId,
-			@RequestParam(name = "topicId", required = true) Long topicId) {
+			@RequestParam(name = "topicId", required = true) Long topicId,
+			HttpServletRequest request) {
 		try {
-			service.addAnswer(answer, categoryId, technologyId, topicId);
+			String username = getUserFromJwt(request);
+			service.addAnswer(answer, username, categoryId, technologyId, topicId);
 			return new Response(null, null, false);
 		} catch (Exception ex) {
 			return new Response(null, ex.getMessage(), true);

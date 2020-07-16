@@ -128,11 +128,13 @@ public class CacheDomainImpl implements CacheDomain {
 		}
 	}
 
-	public Answer addAnswer(Answer answer, Long categoryId, Long technologyId, Long topicId) {
+	public Answer addAnswer(Answer answer, String username, Long categoryId, Long technologyId, Long topicId) {
 		Topic topic = findTopic(categoryId, technologyId, topicId);
 		topic.addAnswer(answer);
+		User user = getUserByUsername(username);
+		answer.userCreator = user;
 		AnswerEntity answerEntity = new AnswerEntity(answer.text, findTopicEntity(topicId),
-				findUserEntity(answer.userCreator.getId()));
+				findUserEntity(user.getId()));
 		repo.saveAnswer(answerEntity);
 		answer.setId(answerEntity.getId());
 		return answer;
@@ -141,9 +143,10 @@ public class CacheDomainImpl implements CacheDomain {
 	public void rateAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId, int rating)
 			throws Exception {
 		Answer answer = findAnswer(categoryId, technologyId, topicId, answerId);
-		if (answer.isUserCreator(getUserByUsername(username))) {
-			AnswerEntity answerEntity = findAnswerEntity(answerId);
+		Topic topic = findTopic(categoryId, technologyId, topicId);
+		if (topic.isUserCreator(getUserByUsername(username))) {
 			if (answer.isRatingOk(rating)) {
+				AnswerEntity answerEntity = findAnswerEntity(answerId);
 				answerEntity.setRating(rating);
 				repo.saveAnswer(answerEntity);
 				answer.setRating(rating);
@@ -159,7 +162,8 @@ public class CacheDomainImpl implements CacheDomain {
 			throws Exception {
 		Answer answer = findAnswer(categoryId, technologyId, topicId, answerId);
 		User user = getUserByUsername(username);
-		if (answer.isUserCreator(user)) {
+		Topic topic = findTopic(categoryId, technologyId, topicId);
+		if (topic.isUserCreator(getUserByUsername(username))) {
 			if (user.isPointingOk(points)) {
 				UserEntity userEnt = findUserEntity(answer.userCreator.getId());
 				userEnt.addPoints(points);
@@ -189,8 +193,8 @@ public class CacheDomainImpl implements CacheDomain {
 	public void deleteAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId)
 			throws Exception {
 		Topic topic = findTopic(categoryId, technologyId, topicId);
-		topic.deleteAnswer(answerId);
 		if (topic.isUserCreatorForAnswer(getUserByUsername(username), answerId)) {
+			topic.deleteAnswer(answerId);
 			repo.deleteAnswerById(answerId);
 		} else {
 			throw new Exception("This user can't remove this answer");

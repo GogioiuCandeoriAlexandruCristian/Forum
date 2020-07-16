@@ -31,7 +31,7 @@ public interface Service {
 	void editTopicQuestion(String username, Long categoryId, Long technologyId, Long topicId, String newQuestion)
 			throws Exception;
 
-	void addAnswer(AnswerModel answer, Long categoryId, Long technologyId, Long topicId);
+	void addAnswer(AnswerModel answer, String username, Long categoryId, Long technologyId, Long topicId);
 
 	void rateAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId, int rating)
 			throws Exception;
