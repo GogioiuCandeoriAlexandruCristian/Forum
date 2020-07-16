@@ -17,13 +17,6 @@ public class Category {
 		title = newTitle;
 	}
 
-	public void changeTopicFromTechnolgy(Long topicId, Long actualTechnologyId, Long newTechnologyId) {
-		Technology actualTechnologyOption = findTechnology(actualTechnologyId);
-		Topic topic = actualTechnologyOption.removeTopic(topicId);
-		Technology newTechnologyOption = findTechnology(newTechnologyId);
-		newTechnologyOption.addTopic(topic);
-	}
-
 	public Technology findTechnology(Long technologyId) {
 		try {
 			Technology technology = io.vavr.collection.List.ofAll(technologies)

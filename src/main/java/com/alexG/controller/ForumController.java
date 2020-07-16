@@ -91,12 +91,11 @@ public class ForumController {
 
 	@PostMapping("/topic/change")
 	@PreAuthorize("hasRole('ADMIN')")
-	public Response changeTopicFromTechnolgy(@RequestParam(name = "categoryId", required = true) Long categoryId,
-			@RequestParam(name = "topicId", required = true) Long topicId,
+	public Response changeTopicFromTechnolgy(@RequestParam(name = "topicId", required = true) Long topicId,
 			@RequestParam(name = "actualTechnologyId", required = true) Long actualTechnologyId,
 			@RequestParam(name = "newTechnologyId", required = true) Long newTechnologyId) {
 		try {
-			service.changeTopicFromTechnolgy(categoryId, topicId, actualTechnologyId, newTechnologyId);
+			service.changeTopicFromTechnolgy(topicId, actualTechnologyId, newTechnologyId);
 			return new Response(null, null, false);
 		} catch (Exception ex) {
 			return new Response(null, ex.getMessage(), true);
@@ -256,7 +255,7 @@ public class ForumController {
 			if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
 				return jwtUtils.getUserNameFromJwtToken(jwt);
 			}
-		} 
+		}
 		return null;
 	}
 }

@@ -15,7 +15,7 @@ public interface CacheDomain {
 
 	Technology addTechnology(Technology technology, Long categoryId);
 
-	void changeTopicFromTechnolgy(Long categoryId, Long topicId, Long actualTechnologyId, Long newTechnologyId);
+	void changeTopicFromTechnolgy(Long topicId, Long actualTechnologyId, Long newTechnologyId);
 
 	void changeCategTitle(Long categId, String newTitle);
 

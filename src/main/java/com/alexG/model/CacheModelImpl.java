@@ -56,11 +56,31 @@ public class CacheModelImpl implements CacheModel {
 		findCategory(categoryId).addTechnology(technologyModel);
 	}
 
-	public void changeTopicFromTechnolgy(Long categoryId, Long topicId, Long actualTechnologyId, Long newTechnologyId) {
-		cacheDomain.changeTopicFromTechnolgy(categoryId, topicId, actualTechnologyId, newTechnologyId);
-		findTechnology(categoryId, actualTechnologyId).removeTopic(topicId);
-		TopicModel topicModel = findTopic(categoryId, actualTechnologyId, topicId);
-		findTechnology(categoryId, newTechnologyId).addTopic(topicModel);
+	public void changeTopicFromTechnolgy(Long topicId, Long actualTechnologyId, Long newTechnologyId) {
+		cacheDomain.changeTopicFromTechnolgy(topicId, actualTechnologyId, newTechnologyId);
+		TechnologyModel actualTechnology = null;
+		TechnologyModel newTechnology = null;
+		for (CategoryModel category : categoriesCache) {
+			for(TechnologyModel tech : category.technologies) {
+				if(tech.getId() == actualTechnologyId) {
+					actualTechnology = tech;
+				}
+				if(tech.getId() == newTechnologyId) {
+					newTechnology = tech;
+				}
+			}
+		}
+		if(actualTechnology == null || newTechnology == null)
+			throw new NoSuchElementException("Tehnologies Model not found by this ids");
+		TopicModel topicModel = null;
+		for(TopicModel topic : actualTechnology.topics) {
+			if(topic.getId() ==  topicId) {
+				topicModel = topic;
+				break;
+			}
+		}
+		actualTechnology.removeTopic(topicId);
+		newTechnology.addTopic(topicModel);
 	}
 
 	public void changeCategTitle(Long categoryId, String newTitle) {

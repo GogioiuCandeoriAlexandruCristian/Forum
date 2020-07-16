@@ -32,8 +32,8 @@ public class ServiceImpl implements Service {
 		cacheModel.addTopic(topic, username, categoryId, technologyId);
 	}
 
-	public void changeTopicFromTechnolgy(Long categoryId, Long topicId, Long actualTechnologyId, Long newTechnologyId) {
-		cacheModel.changeTopicFromTechnolgy(categoryId, topicId, actualTechnologyId, newTechnologyId);
+	public void changeTopicFromTechnolgy(Long topicId, Long actualTechnologyId, Long newTechnologyId) {
+		cacheModel.changeTopicFromTechnolgy(topicId, actualTechnologyId, newTechnologyId);
 	}
 
 	public void changeCategTitle(Long categId, String newTitle) {

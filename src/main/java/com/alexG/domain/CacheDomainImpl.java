@@ -18,6 +18,8 @@ import com.alexG.entities.TechnologyEntity;
 import com.alexG.entities.TopicEntity;
 import com.alexG.entities.UserEntity;
 
+import io.vavr.Tuple2;
+
 @Component
 public class CacheDomainImpl implements CacheDomain {
 
@@ -57,13 +59,32 @@ public class CacheDomainImpl implements CacheDomain {
 		return technology;
 	}
 
-	public void changeTopicFromTechnolgy(Long categoryId, Long topicId, Long actualTechnologyId, Long newTechnologyId) {
-		Category categ = null;
-		categ = findCategory(categoryId);
-		categ.changeTopicFromTechnolgy(topicId, actualTechnologyId, newTechnologyId);
+	public void changeTopicFromTechnolgy(Long topicId, Long actualTechnologyId, Long newTechnologyId) {
+		Tuple2<Technology, Technology> tupleTechnologies = findTechnologies(actualTechnologyId, newTechnologyId);
+		Topic topic = tupleTechnologies._1.findTopic(topicId);
+		tupleTechnologies._2.addTopic(topic);
+		tupleTechnologies._1.removeTopic(topicId);
 		TopicEntity topicEntity = findTopicEntity(topicId);
 		topicEntity.setTechnology(findTechnologyEntity(newTechnologyId));
 		repo.saveTopic(topicEntity);
+	}
+
+	private Tuple2<Technology, Technology> findTechnologies(Long actualTechnologyId, Long newTechnologyId) {
+		Technology actualTechnology = null;
+		Technology newTechnology = null;
+		for (Category category : categoriesCache) {
+			for(Technology tech : category.technologies) {
+				if(tech.getId() == actualTechnologyId) {
+					actualTechnology = tech;
+				}
+				if(tech.getId() == newTechnologyId) {
+					newTechnology = tech;
+				}
+			}
+		}
+		if(actualTechnology == null || newTechnology == null)
+			throw new NoSuchElementException("Tehnologies not found by this ids");
+		return new Tuple2<Technology, Technology>(actualTechnology, newTechnology);
 	}
 
 	public void changeCategTitle(Long categoryId, String newTitle) {
