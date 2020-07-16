@@ -37,7 +37,7 @@ public class Topic {
 	}
 
 	public boolean isUserCreator(User user) {
-		return user.getUsername() == userCreator.getUsername();
+		return user.getUsername().equals(userCreator.getUsername());
 	}
 
 	public boolean isUserCreatorForAnswer(User user, Long answerId) {

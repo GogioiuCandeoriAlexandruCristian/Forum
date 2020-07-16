@@ -20,7 +20,7 @@ public class Answer {
 	}
 
 	public boolean isUserCreator(User user) {
-		return user.getUsername() == userCreator.getUsername();
+		return user.getUsername().equals(userCreator.getUsername());
 	}
 
 	public Long getId() {
