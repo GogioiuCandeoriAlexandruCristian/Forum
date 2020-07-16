@@ -12,6 +12,8 @@ import com.alexG.domain.entities.Answer;
 import com.alexG.domain.entities.Technology;
 import com.alexG.domain.entities.Topic;
 
+import io.vavr.Tuple2;
+
 @Component
 public class CacheModelImpl implements CacheModel {
 
@@ -43,7 +45,8 @@ public class CacheModelImpl implements CacheModel {
 	}
 
 	public void addTopic(TopicModel topicModel, String username, Long categoryId, Long technologyId) {
-		Topic topic = cacheDomain.addTopic(mapperModelToDomain.topicModelToTopic(topicModel), username, categoryId, technologyId);
+		Topic topic = cacheDomain.addTopic(mapperModelToDomain.topicModelToTopic(topicModel), username, categoryId,
+				technologyId);
 		topicModel.setId(topic.getId());
 		topicModel.userCreator = mapperDomnainToModel.userToUserModel(topic.userCreator);
 		findTechnology(categoryId, technologyId).addTopic(topicModel);
@@ -58,29 +61,37 @@ public class CacheModelImpl implements CacheModel {
 
 	public void changeTopicFromTechnolgy(Long topicId, Long actualTechnologyId, Long newTechnologyId) {
 		cacheDomain.changeTopicFromTechnolgy(topicId, actualTechnologyId, newTechnologyId);
-		TechnologyModel actualTechnology = null;
-		TechnologyModel newTechnology = null;
-		for (CategoryModel category : categoriesCache) {
-			for(TechnologyModel tech : category.technologies) {
-				if(tech.getId() == actualTechnologyId) {
-					actualTechnology = tech;
-				}
-				if(tech.getId() == newTechnologyId) {
-					newTechnology = tech;
-				}
-			}
-		}
-		if(actualTechnology == null || newTechnology == null)
-			throw new NoSuchElementException("Tehnologies Model not found by this ids");
+		Tuple2<TechnologyModel, TechnologyModel> tupleTechnologies = findTechnologies(actualTechnologyId,
+				newTechnologyId);
 		TopicModel topicModel = null;
-		for(TopicModel topic : actualTechnology.topics) {
-			if(topic.getId() ==  topicId) {
+		for (TopicModel topic : tupleTechnologies._1.topics) {
+			if (topic.getId() == topicId) {
 				topicModel = topic;
 				break;
 			}
 		}
-		actualTechnology.removeTopic(topicId);
-		newTechnology.addTopic(topicModel);
+		if(topicModel == null)
+			throw new NoSuchElementException("Not found -> topic  model with id: " + topicId + " in technology with id: " + actualTechnologyId);
+		tupleTechnologies._1.removeTopic(topicId);
+		tupleTechnologies._2.addTopic(topicModel);
+	}
+
+	private Tuple2<TechnologyModel, TechnologyModel> findTechnologies(Long actualTechnologyId, Long newTechnologyId) {
+		TechnologyModel actualTechnology = null;
+		TechnologyModel newTechnology = null;
+		for (CategoryModel category : categoriesCache) {
+			for (TechnologyModel tech : category.technologies) {
+				if (tech.getId() == actualTechnologyId) {
+					actualTechnology = tech;
+				}
+				if (tech.getId() == newTechnologyId) {
+					newTechnology = tech;
+				}
+			}
+		}
+		if (actualTechnology == null || newTechnology == null)
+			throw new NoSuchElementException("Tehnologies Model not found by this ids");
+		return new Tuple2<TechnologyModel, TechnologyModel>(actualTechnology, newTechnology);
 	}
 
 	public void changeCategTitle(Long categoryId, String newTitle) {
@@ -103,10 +114,9 @@ public class CacheModelImpl implements CacheModel {
 		findTechnology(categoryId, technologyId).title = newTitle;
 	}
 
-	public void editTopicQuestion(String username, Long categoryId, Long technologyId, Long topicId,
-			String newQuestion) throws Exception {
-		cacheDomain.editTopicQuestion(username, categoryId, technologyId, topicId,
-				newQuestion);
+	public void editTopicQuestion(String username, Long categoryId, Long technologyId, Long topicId, String newQuestion)
+			throws Exception {
+		cacheDomain.editTopicQuestion(username, categoryId, technologyId, topicId, newQuestion);
 		findTopic(categoryId, technologyId, topicId).question = newQuestion;
 	}
 
@@ -117,31 +127,27 @@ public class CacheModelImpl implements CacheModel {
 		findTopic(categoryId, technologyId, topicId).addAnswer(answerModel);
 	}
 
-	public void rateAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId,
-			int rating) throws Exception {
-		cacheDomain.rateAnswer(username, categoryId, technologyId, topicId,
-				answerId, rating);
+	public void rateAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId, int rating)
+			throws Exception {
+		cacheDomain.rateAnswer(username, categoryId, technologyId, topicId, answerId, rating);
 		findAnswer(categoryId, technologyId, topicId, answerId).rating = rating;
 	}
 
 	public void pointAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId,
 			int points) throws Exception {
-		cacheDomain.pointAnswer(username, categoryId, technologyId, topicId,
-				answerId, points);
+		cacheDomain.pointAnswer(username, categoryId, technologyId, topicId, answerId, points);
 		findAnswer(categoryId, technologyId, topicId, answerId).points = points;
 	}
 
 	public void editAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId,
 			String newText) throws Exception {
-		cacheDomain.editAnswer(username, categoryId, technologyId, topicId,
-				answerId, newText);
+		cacheDomain.editAnswer(username, categoryId, technologyId, topicId, answerId, newText);
 		findAnswer(categoryId, technologyId, topicId, answerId).text = newText;
 	}
 
 	public void deleteAnswer(String username, Long categoryId, Long technologyId, Long topicId, Long answerId)
 			throws Exception {
-		cacheDomain.deleteAnswer(username, categoryId, technologyId, topicId,
-				answerId);
+		cacheDomain.deleteAnswer(username, categoryId, technologyId, topicId, answerId);
 		findTopic(categoryId, technologyId, topicId).removeAnswer(answerId);
 	}
 
