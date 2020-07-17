@@ -44,6 +44,7 @@ public class RepositoryTestImpl extends Repository {
 		technology1.addTopic(topic2);
 
 		categ1.addTechnology(technology1);
+		categ1.addTechnology(technology2);
 
 		topic4.addAnswer(answer4);
 		topic3.addAnswer(answer5);
@@ -60,8 +61,19 @@ public class RepositoryTestImpl extends Repository {
 		technology1.setId(1L);
 		categ1.setId(1L);
 		topic1.setId(1L);
+		topic1.setTechnology(technology1);
 		answer1.setId(1L);
-		
+
+
+		UserEntity user2 = new UserEntity();
+		user2.setId(3L);
+		user2.setUsername("alex3");
+		topic2.setUserCreator(user2);
+		answer2.setUserCreator(user2);
+		technology2.setId(3L);
+		topic2.setId(3L);
+		topic2.setTechnology(technology2);
+		answer2.setId(3L);
 		categs.add(categ1);
 	}
 
@@ -71,12 +83,53 @@ public class RepositoryTestImpl extends Repository {
 	}
 
 	@Override
+	public void saveTechnology(TechnologyEntity techEntity) {
+		for (CategoryEntity categoryEntity : categs) {
+			if (categoryEntity.getId() == techEntity.getCategory().getId()) {
+				techEntity.setId(Long.parseLong(techEntity.getTitle()));
+				categoryEntity.addTechnology(techEntity);
+				return;
+			}
+		}
+	}
+
+	@Override
+	public void saveAnswer(AnswerEntity answerEntity) {
+		for (CategoryEntity categoryEntity : categs) {
+			for (TechnologyEntity tech : categoryEntity.getTechnologies()) {
+				for (TopicEntity topic : tech.getTopics()) {
+					if (topic.getId() == answerEntity.topic.getId()) {
+						if(answerEntity.getText() != null && answerEntity.getText().contains("#"))
+							answerEntity.setId(Long.parseLong(answerEntity.getText().substring(1)));
+						topic.addAnswer(answerEntity);
+						return;
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public void saveTopic(TopicEntity topicEntity) {
+		for (CategoryEntity categoryEntity : categs) {
+			for (TechnologyEntity tech : categoryEntity.getTechnologies()) {
+					if (tech.getId() == topicEntity.getTechnology().getId()) {
+						if(topicEntity.getTitle() != null && topicEntity.getTitle().contains("#"))
+							topicEntity.setId(Long.parseLong(topicEntity.getTitle().substring(1)));
+						tech.addTopic(topicEntity);
+						return;
+					}
+			}
+		}
+	}
+
+	@Override
 	public void saveUser(UserEntity userEnt) {
 		for (CategoryEntity categoryEntity : categs) {
 			for (TechnologyEntity tech : categoryEntity.getTechnologies()) {
-				for(TopicEntity topic : tech.getTopics()) {
-					for(AnswerEntity answer : topic.getAnswers()) {
-						if(answer.userCreator!= null && answer.userCreator.getId() == userEnt.getId())
+				for (TopicEntity topic : tech.getTopics()) {
+					for (AnswerEntity answer : topic.getAnswers()) {
+						if (answer.userCreator != null && answer.userCreator.getId() == userEnt.getId())
 							answer.userCreator = userEnt;
 					}
 				}
@@ -88,24 +141,46 @@ public class RepositoryTestImpl extends Repository {
 	public UserEntity findUserByUsername(String username) {
 		for (CategoryEntity categoryEntity : categs) {
 			for (TechnologyEntity tech : categoryEntity.getTechnologies()) {
-				for(TopicEntity topic : tech.getTopics()) {
-					for(AnswerEntity answer : topic.getAnswers()) {
-						if(answer.userCreator.getUsername().equals(username))
+				for (TopicEntity topic : tech.getTopics()) {
+					for (AnswerEntity answer : topic.getAnswers()) {
+						if (answer.userCreator != null && answer.userCreator.getUsername().equals(username))
 							return answer.userCreator;
 					}
 				}
 			}
 		}
-		return null;
+		return new UserEntity(username, "", "");
+	}
+
+	@Override
+	public Optional<CategoryEntity> findCategoryById(Long categoryId) {
+		for (CategoryEntity categoryEntity : categs) {
+			if (categoryEntity.getId() == categoryId) {
+				return Optional.of(categoryEntity);
+			}
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public Optional<TechnologyEntity> findTechnologyById(Long technologyId) {
+		for (CategoryEntity categoryEntity : categs) {
+			for (TechnologyEntity tech : categoryEntity.getTechnologies()) {
+				if (tech.getId() == technologyId) {
+					return Optional.of(tech);
+				}
+			}
+		}
+		return Optional.empty();
 	}
 
 	@Override
 	public Optional<UserEntity> findUserById(Long userId) {
 		for (CategoryEntity categoryEntity : categs) {
 			for (TechnologyEntity tech : categoryEntity.getTechnologies()) {
-				for(TopicEntity topic : tech.getTopics()) {
-					for(AnswerEntity answer : topic.getAnswers()) {
-						if(answer.userCreator.getId() == userId)
+				for (TopicEntity topic : tech.getTopics()) {
+					for (AnswerEntity answer : topic.getAnswers()) {
+						if (answer.userCreator.getId() == userId)
 							return Optional.of(answer.userCreator);
 					}
 				}
@@ -118,11 +193,25 @@ public class RepositoryTestImpl extends Repository {
 	public Optional<AnswerEntity> findAnswerById(Long answerId) {
 		for (CategoryEntity categoryEntity : categs) {
 			for (TechnologyEntity tech : categoryEntity.getTechnologies()) {
-				for(TopicEntity topic : tech.getTopics()) {
-					for(AnswerEntity answer : topic.getAnswers()) {
-						if(answer.getId() == answerId)
+				for (TopicEntity topic : tech.getTopics()) {
+					for (AnswerEntity answer : topic.getAnswers()) {
+						if (answer.getId() == answerId) {
+							answer.setTopic(topic);
 							return Optional.of(answer);
+						}
 					}
+				}
+			}
+		}
+		return Optional.empty();
+	}
+
+	public Optional<TopicEntity> findTopicById(Long topicId) {
+		for (CategoryEntity categoryEntity : categs) {
+			for (TechnologyEntity tech : categoryEntity.getTechnologies()) {
+				for (TopicEntity topic : tech.getTopics()) {
+					if (topic.getId() == topicId)
+						return Optional.of(topic);
 				}
 			}
 		}
@@ -140,7 +229,8 @@ public class RepositoryTestImpl extends Repository {
 		return technology.findTopic(topicId);
 	}
 
-	public Answer findAnswer(List<Category> categoriesCache, Long categoryId, Long technologyId, Long topicId, Long answerId) {
+	public Answer findAnswer(List<Category> categoriesCache, Long categoryId, Long technologyId, Long topicId,
+			Long answerId) {
 		Category categ = findCategory(categoriesCache, categoryId);
 		Technology technology = categ.findTechnology(technologyId);
 		Topic topic = technology.findTopic(topicId);

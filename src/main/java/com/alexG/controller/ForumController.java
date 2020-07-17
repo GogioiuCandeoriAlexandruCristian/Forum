@@ -65,52 +65,52 @@ public class ForumController {
 
 	@PostMapping("/topic")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public Response addTopic(HttpServletRequest request, @Valid @RequestBody TopicModel topic,
+	public Response<TopicModel> addTopic(HttpServletRequest request, @Valid @RequestBody TopicModel topic,
 			@RequestParam(name = "categoryId", required = true) Long categoryId,
 			@RequestParam(name = "technologyId", required = true) Long technologyId) {
 		try {
 			String username = getUserFromJwt(request);
-			service.addTopic(topic, username, categoryId, technologyId);
-			return new Response(null, null, false);
+			topic = service.addTopic(topic, username, categoryId, technologyId);
+			return new Response<TopicModel>(topic, null, false);
 		} catch (Exception ex) {
-			return new Response(null, ex.getMessage(), true);
+			return new Response<TopicModel>(null, ex.getMessage(), true);
 		}
 	}
 
 	@PostMapping("/technology/add")
 	@PreAuthorize("hasRole('ADMIN')")
-	public Response addTechnology(@Valid @RequestBody TechnologyModel technology,
+	public Response<TechnologyModel> addTechnology(@Valid @RequestBody TechnologyModel technology,
 			@RequestParam(name = "categoryId", required = true) Long categoryId) {
 		try {
-			service.addTechnology(technology, categoryId);
-			return new Response(null, null, false);
+			technology = service.addTechnology(technology, categoryId);
+			return new Response<TechnologyModel>(technology, null, false);
 		} catch (Exception ex) {
-			return new Response(null, ex.getMessage(), true);
+			return new Response<TechnologyModel>(null, ex.getMessage(), true);
 		}
 	}
 
 	@PostMapping("/topic/change")
 	@PreAuthorize("hasRole('ADMIN')")
-	public Response changeTopicFromTechnolgy(@RequestParam(name = "topicId", required = true) Long topicId,
+	public Response<TechnologyModel> changeTopicFromTechnolgy(@RequestParam(name = "topicId", required = true) Long topicId,
 			@RequestParam(name = "actualTechnologyId", required = true) Long actualTechnologyId,
 			@RequestParam(name = "newTechnologyId", required = true) Long newTechnologyId) {
 		try {
-			service.changeTopicFromTechnolgy(topicId, actualTechnologyId, newTechnologyId);
-			return new Response(null, null, false);
+			TechnologyModel technology = service.changeTopicFromTechnolgy(topicId, actualTechnologyId, newTechnologyId);
+			return new Response<TechnologyModel>(technology, null, false);
 		} catch (Exception ex) {
-			return new Response(null, ex.getMessage(), true);
+			return new Response<TechnologyModel>(null, ex.getMessage(), true);
 		}
 	}
 
 	@PostMapping("/categ")
 	@PreAuthorize("hasRole('ADMIN')")
-	public Response changeCategTitle(@RequestParam(name = "categoryId", required = true) Long categoryId,
+	public Response<CategoryModel> changeCategTitle(@RequestParam(name = "categoryId", required = true) Long categoryId,
 			@RequestParam(name = "newTitle", required = true) String newTitle) {
 		try {
-			service.changeCategTitle(categoryId, newTitle);
-			return new Response(null, null, false);
+			CategoryModel category = service.changeCategTitle(categoryId, newTitle);
+			return new Response<CategoryModel>(category, null, false);
 		} catch (Exception ex) {
-			return new Response(null, ex.getMessage(), true);
+			return new Response<CategoryModel>(null, ex.getMessage(), true);
 		}
 	}
 
@@ -141,68 +141,68 @@ public class ForumController {
 
 	@PostMapping("/technology/change")
 	@PreAuthorize("hasRole('ADMIN')")
-	public Response changeTechnologyTitle(@RequestParam(name = "categoryId", required = true) Long categoryId,
+	public Response<TechnologyModel> changeTechnologyTitle(@RequestParam(name = "categoryId", required = true) Long categoryId,
 			@RequestParam(name = "technologyId", required = true) Long technologyId,
 			@RequestParam(name = "newTitle", required = true) String newTitle) {
 		try {
-			service.changeTechnologyTitle(categoryId, technologyId, newTitle);
-			return new Response(null, null, false);
+			TechnologyModel technology = service.changeTechnologyTitle(categoryId, technologyId, newTitle);
+			return new Response<TechnologyModel>(technology, null, false);
 		} catch (Exception ex) {
-			return new Response(null, ex.getMessage(), true);
+			return new Response<TechnologyModel>(null, ex.getMessage(), true);
 		}
 	}
 
 	@PostMapping("/topic/edit")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public Response editTopicQuestion(HttpServletRequest request,
+	public Response<TopicModel> editTopicQuestion(HttpServletRequest request,
 			@RequestParam(name = "categoryId", required = true) Long categoryId,
 			@RequestParam(name = "technologyId", required = true) Long technologyId,
 			@RequestParam(name = "topicId", required = true) Long topicId,
 			@RequestParam(name = "newQuestion", required = true) String newQuestion) {
 		try {
 			String username = getUserFromJwt(request);
-			service.editTopicQuestion(username, categoryId, technologyId, topicId, newQuestion);
-			return new Response(null, null, false);
+			TopicModel topic = service.editTopicQuestion(username, categoryId, technologyId, topicId, newQuestion);
+			return new Response<TopicModel>(topic, null, false);
 		} catch (Exception ex) {
-			return new Response(null, ex.getMessage(), true);
+			return new Response<TopicModel>(null, ex.getMessage(), true);
 		}
 	}
 
 	@PostMapping("/answer/add")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public Response addAnswer(@Valid @RequestBody AnswerModel answer,
+	public Response<TopicModel> addAnswer(@Valid @RequestBody AnswerModel answer,
 			@RequestParam(name = "categoryId", required = true) Long categoryId,
 			@RequestParam(name = "technologyId", required = true) Long technologyId,
 			@RequestParam(name = "topicId", required = true) Long topicId,
 			HttpServletRequest request) {
 		try {
 			String username = getUserFromJwt(request);
-			service.addAnswer(answer, username, categoryId, technologyId, topicId);
-			return new Response(null, null, false);
+			TopicModel topic = service.addAnswer(answer, username, categoryId, technologyId, topicId);
+			return new Response<TopicModel>(topic, null, false);
 		} catch (Exception ex) {
-			return new Response(null, ex.getMessage(), true);
+			return new Response<TopicModel>(null, ex.getMessage(), true);
 		}
 	}
 
 	@PostMapping("/answer/edit/rating")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public Response rateAnswer(HttpServletRequest request,
+	public Response<AnswerModel> rateAnswer(HttpServletRequest request,
 			@RequestParam(name = "categoryId", required = true) Long categoryId,
 			@RequestParam(name = "technologyId", required = true) Long technologyId,
 			@RequestParam(name = "topicId", required = true) Long topicId,
 			@RequestParam(name = "answerId", required = true) Long answerId, int rating) {
 		try {
 			String username = getUserFromJwt(request);
-			service.rateAnswer(username, categoryId, technologyId, topicId, answerId, rating);
-			return new Response(null, null, false);
+			AnswerModel answer = service.rateAnswer(username, categoryId, technologyId, topicId, answerId, rating);
+			return new Response<AnswerModel>(answer, null, false);
 		} catch (Exception ex) {
-			return new Response(null, ex.getMessage(), true);
+			return new Response<AnswerModel>(null, ex.getMessage(), true);
 		}
 	}
 
 	@PostMapping("/answer/edit/points")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public Response pointAnswer(HttpServletRequest request,
+	public Response<AnswerModel> pointAnswer(HttpServletRequest request,
 			@RequestParam(name = "categoryId", required = true) Long categoryId,
 			@RequestParam(name = "technologyId", required = true) Long technologyId,
 			@RequestParam(name = "topicId", required = true) Long topicId,
@@ -210,16 +210,16 @@ public class ForumController {
 			@RequestParam(name = "points", required = true) int points) {
 		try {
 			String username = getUserFromJwt(request);
-			service.pointAnswer(username, categoryId, technologyId, topicId, answerId, points);
-			return new Response(null, null, false);
+			AnswerModel answer = service.pointAnswer(username, categoryId, technologyId, topicId, answerId, points);
+			return new Response<AnswerModel>(answer, null, false);
 		} catch (Exception ex) {
-			return new Response(null, ex.getMessage(), true);
+			return new Response<AnswerModel>(null, ex.getMessage(), true);
 		}
 	}
 
 	@PostMapping("/answer/edit/text")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public Response editAnswer(HttpServletRequest request,
+	public Response<AnswerModel> editAnswer(HttpServletRequest request,
 			@RequestParam(name = "categoryId", required = true) Long categoryId,
 			@RequestParam(name = "technologyId", required = true) Long technologyId,
 			@RequestParam(name = "topicId", required = true) Long topicId,
@@ -227,10 +227,10 @@ public class ForumController {
 			@RequestParam(name = "newText", required = true) String newText) {
 		try {
 			String username = getUserFromJwt(request);
-			service.editAnswer(username, categoryId, technologyId, topicId, answerId, newText);
-			return new Response(null, null, false);
+			AnswerModel answer = service.editAnswer(username, categoryId, technologyId, topicId, answerId, newText);
+			return new Response<AnswerModel>(answer, null, false);
 		} catch (Exception ex) {
-			return new Response(null, ex.getMessage(), true);
+			return new Response<AnswerModel>(null, ex.getMessage(), true);
 		}
 	}
 
