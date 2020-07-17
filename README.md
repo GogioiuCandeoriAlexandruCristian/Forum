@@ -8,4 +8,5 @@
 
 
 Get requests for test (postman)
-https://www.getpostman.com/collections/84ab7ec6eb2910cf0b6f
+https://www.getpostman.com/collections/84ab7ec6eb2910cf0b6f - execution of requests must be done from the bottom up order
+
